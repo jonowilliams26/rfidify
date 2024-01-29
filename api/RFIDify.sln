@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RFIDify", "RFIDify.csproj", "{082B1A53-D051-4CDB-A3CE-222AE83BE5FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{082B1A53-D051-4CDB-A3CE-222AE83BE5FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{082B1A53-D051-4CDB-A3CE-222AE83BE5FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{082B1A53-D051-4CDB-A3CE-222AE83BE5FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{082B1A53-D051-4CDB-A3CE-222AE83BE5FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A042793B-283B-43E6-B747-EE61176E266A}
+	EndGlobalSection
+EndGlobal

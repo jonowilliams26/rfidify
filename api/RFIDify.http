@@ -1,0 +1,6 @@
+@RFIDify_HostAddress = http://localhost:5293
+
+GET {{RFIDify_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
