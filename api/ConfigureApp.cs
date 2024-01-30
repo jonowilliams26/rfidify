@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using RFIDify.Api;
+using Serilog;
 
 namespace RFIDify;
 
@@ -10,6 +11,7 @@ public static class ConfigureApp
         app.UseSwagger();
         app.UseSwaggerUI();
         app.UseHttpsRedirection();
+        app.MapEndpoints();
         await app.EnsureDatabaseCreated();
     }
 

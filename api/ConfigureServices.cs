@@ -9,6 +9,7 @@ public static class ConfigureServices
         builder.AddSerilog();
         builder.AddSwagger();
         builder.AddDatabase();
+        builder.AddSpotifyAccountsApi();
     }
 
     private static void AddSwagger(this WebApplicationBuilder builder)
@@ -30,6 +31,16 @@ public static class ConfigureServices
         builder.Services.AddDbContext<AppDbContext>(options =>
         {
             options.UseSqlite("Data Source=database/app.db");
+        });
+    }
+
+    private static void AddSpotifyAccountsApi(this WebApplicationBuilder builder)
+    {
+        builder.Services.Configure<SpotifyAccountsApiOptions>(builder.Configuration.GetSection("Spotify:AccountsApi"));
+        builder.Services.AddHttpClient<ISpotifyAccountsApi, SpotifyAccountsApi>(client =>
+        {
+            var baseUrl = builder.Configuration["Spotify:AccountsApi:BaseUrl"];
+            client.BaseAddress = new Uri(baseUrl!);
         });
     }
 }
