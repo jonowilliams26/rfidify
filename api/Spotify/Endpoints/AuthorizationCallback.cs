@@ -1,31 +1,31 @@
 ﻿namespace RFIDify.Spotify.Endpoints;
 
+public record AuthorizationCallbackRequest(string? Code, string? State, string? Error);
+public class AuthorizationCallbackRequestValidator : AbstractValidator<AuthorizationCallbackRequest>
+{
+    public AuthorizationCallbackRequestValidator()
+    {
+        RuleFor(x => x.Code)
+            .NotEmpty()
+            .When(x => x.Error is null);
+
+        RuleFor(x => x.State).NotEmpty();
+
+        RuleFor(x => x.Error)
+            .NotEmpty()
+            .When(x => x.Code is null);
+    }
+}
+
 public static class AuthorizationCallback
 {
-    private record Request(string? Code, string? State, string? Error);
-    private class RequestValidator : AbstractValidator<Request>
-    {
-        public RequestValidator()
-        {
-            RuleFor(x => x.Code)
-                .NotEmpty()
-                .When(x => x.Error is null);
-
-            RuleFor(x => x.State).NotEmpty();
-
-            RuleFor(x => x.Error)
-                .NotEmpty()
-                .When(x => x.Code is null);
-        }
-    }
-
     public static void MapAuthorizationCallback(this IEndpointRouteBuilder app) => app
         .MapPost("/authorize", Handle)
         .WithSummary("The authorization callback which is trigger when the user accepts the Spotify terms and conditions")
         .WithDescription("Exchanges the authorization code for an access token and refresh token which will be used to make request to the Spotify Web API")
-        .WithRequestValidation<Request>();
+        .WithRequestValidation<AuthorizationCallbackRequest>();
 
-    private static async Task<Results<Ok, UnauthorizedHttpResult, ValidationProblem>> Handle(Request request, AppDbContext database, ISpotifyAccountsApi api, CancellationToken cancellationToken)
+    private static async Task<Results<Ok, UnauthorizedHttpResult, ValidationProblem>> Handle(AuthorizationCallbackRequest request, AppDbContext database, ISpotifyAccountsApi api, CancellationToken cancellationToken)
     {
         if (request.Error is not null)
         {

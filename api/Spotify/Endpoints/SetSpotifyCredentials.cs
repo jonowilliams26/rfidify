@@ -1,29 +1,29 @@
 ﻿namespace RFIDify.Spotify.Endpoints;
 
+public record SetSpotifyCredentialsRequest(string ClientId, string ClientSecret, string RedirectUri);
+public record SetSpotifyCredentialsResponse(string AuthorizationUri);
+public class SetSpotifyCredentialsRequestValidator : AbstractValidator<SetSpotifyCredentialsRequest>
+{
+    public SetSpotifyCredentialsRequestValidator()
+    {
+        RuleFor(x => x.ClientId).NotEmpty();
+        RuleFor(x => x.ClientSecret).NotEmpty();
+        RuleFor(x => x.RedirectUri)
+            .NotEmpty()
+            .Must(x => Uri.TryCreate(x, UriKind.Absolute, out _))
+            .WithMessage("Invalid URI");
+    }
+}
+
 public static class SetSpotifyCredentials
 {
-    private record Request(string ClientId, string ClientSecret, string RedirectUri);
-    private record Response(string AuthorizationUri);
-    private class RequestValidator : AbstractValidator<Request>
-    {
-        public RequestValidator()
-        {
-            RuleFor(x => x.ClientId).NotEmpty();
-            RuleFor(x => x.ClientSecret).NotEmpty();
-            RuleFor(x => x.RedirectUri)
-                .NotEmpty()
-                .Must(x => Uri.TryCreate(x, UriKind.Absolute, out _))
-                .WithMessage("Invalid URI");
-        }
-    }
-
     public static void MapSetSpotifyCredentials(this IEndpointRouteBuilder app) => app
         .MapPut("/credentials", Handle)
         .WithSummary("Sets the Spotify ClientId and Secret")
         .WithDescription("Returns the authorization URI to accept the Spotify terms and conditions")
-        .WithRequestValidation<Request>();
+        .WithRequestValidation<SetSpotifyCredentialsRequest>();
 
-    private static async Task<Ok<Response>> Handle(Request request, AppDbContext database, ISpotifyAccountsApi api, CancellationToken cancellationToken)
+    private static async Task<Ok<SetSpotifyCredentialsResponse>> Handle(SetSpotifyCredentialsRequest request, AppDbContext database, ISpotifyAccountsApi api, CancellationToken cancellationToken)
     {
         // Remove the old credentials
         var oldCredentials = await database.SpotifyCredentials.ToListAsync(cancellationToken);
@@ -53,6 +53,7 @@ public static class SetSpotifyCredentials
 
         // Generate the authorization URI
         var authorizationUri = api.GenerateAuthorizationUri(credentials, authorizationState);
-        return TypedResults.Ok(new Response(authorizationUri.ToString()));
+        var response = new SetSpotifyCredentialsResponse(authorizationUri.ToString());
+        return TypedResults.Ok(response);
     }
 }
