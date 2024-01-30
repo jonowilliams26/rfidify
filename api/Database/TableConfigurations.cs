@@ -7,7 +7,8 @@ public class TableConfigurations :
     IEntityTypeConfiguration<SpotifyCredentials>, 
     IEntityTypeConfiguration<SpotifyAccessToken>, 
     IEntityTypeConfiguration<SpotifyRefreshToken>, 
-    IEntityTypeConfiguration<SpotifyAuthorizationState>
+    IEntityTypeConfiguration<SpotifyAuthorizationState>,
+    IEntityTypeConfiguration<RFIDTag>
 {
     public void Configure(EntityTypeBuilder<SpotifyCredentials> builder)
     {
@@ -27,5 +28,10 @@ public class TableConfigurations :
     public void Configure(EntityTypeBuilder<SpotifyAuthorizationState> builder)
     {
         builder.HasKey(x => x.State);
+    }
+
+    public void Configure(EntityTypeBuilder<RFIDTag> builder)
+    {
+        builder.ComplexProperty(x => x.SpotifyId);
     }
 }

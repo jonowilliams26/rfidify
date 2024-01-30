@@ -1,6 +1,4 @@
-﻿using RFIDify.Spotify.Data;
-
-namespace RFIDify.Database;
+﻿namespace RFIDify.Database;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
@@ -8,6 +6,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<SpotifyAccessToken> SpotifyAccessToken { get; set; }
     public DbSet<SpotifyRefreshToken> SpotifyRefreshToken { get; set; }
     public DbSet<SpotifyAuthorizationState> SpotifyAuthorizationState { get; set; }
+    public DbSet<RFIDTag> RFIDs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

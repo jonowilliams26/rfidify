@@ -12,6 +12,19 @@ namespace RFIDify.Database.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "RFIDs",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    SpotifyId_Id = table.Column<string>(type: "TEXT", nullable: false),
+                    SpotifyId_Type = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RFIDs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SpotifyAccessToken",
                 columns: table => new
                 {
@@ -62,6 +75,9 @@ namespace RFIDify.Database.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "RFIDs");
+
             migrationBuilder.DropTable(
                 name: "SpotifyAccessToken");
 
