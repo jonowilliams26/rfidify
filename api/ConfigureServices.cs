@@ -10,6 +10,7 @@ public static class ConfigureServices
         builder.AddSwagger();
         builder.AddDatabase();
         builder.AddSpotifyAccountsApi();
+        builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly, includeInternalTypes: true);
     }
 
     private static void AddSwagger(this WebApplicationBuilder builder)
