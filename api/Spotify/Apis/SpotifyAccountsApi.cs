@@ -38,7 +38,7 @@ public class SpotifyAccountsApi(HttpClient httpClient, IOptionsMonitor<SpotifyAc
 
     public async Task<SpotifyTokens> ExchangeAuthorizationCodeForTokens(string authorizationCode, SpotifyAuthorizationState authorizationState, CancellationToken cancellationToken)
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, "/token")
+        var request = new HttpRequestMessage(HttpMethod.Post, "token")
         {
             Content = new FormUrlEncodedContent(new Dictionary<string, string>
             {

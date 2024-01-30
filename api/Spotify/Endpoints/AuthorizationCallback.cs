@@ -20,12 +20,12 @@ public class AuthorizationCallbackRequestValidator : AbstractValidator<Authoriza
 public static class AuthorizationCallback
 {
     public static void MapAuthorizationCallback(this IEndpointRouteBuilder app) => app
-        .MapPost("/authorize", Handle)
+        .MapGet("/authorize", Handle)
         .WithSummary("The authorization callback which is trigger when the user accepts the Spotify terms and conditions")
         .WithDescription("Exchanges the authorization code for an access token and refresh token which will be used to make request to the Spotify Web API")
         .WithRequestValidation<AuthorizationCallbackRequest>();
 
-    private static async Task<Results<Ok, UnauthorizedHttpResult, ValidationProblem>> Handle(AuthorizationCallbackRequest request, AppDbContext database, ISpotifyAccountsApi api, CancellationToken cancellationToken)
+    private static async Task<Results<Ok, UnauthorizedHttpResult, ValidationProblem>> Handle([AsParameters] AuthorizationCallbackRequest request, AppDbContext database, ISpotifyAccountsApi api, CancellationToken cancellationToken)
     {
         if (request.Error is not null)
         {
