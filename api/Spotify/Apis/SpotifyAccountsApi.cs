@@ -10,6 +10,7 @@ public interface ISpotifyAccountsApi
 {
     Task<SpotifyTokens> ExchangeAuthorizationCodeForTokens(string authorizationCode, SpotifyAuthorizationState authorizationState, CancellationToken cancellationToken);
     Uri GenerateAuthorizationUri(SpotifyCredentials credentials, SpotifyAuthorizationState authorizationState);
+    Task<SpotifyAccessToken> RefreshAccessToken(SpotifyRefreshToken refreshToken, CancellationToken cancellationToken);
 }
 
 public class SpotifyAccountsApiOptions
@@ -64,6 +65,25 @@ public class SpotifyAccountsApi(HttpClient httpClient, IOptionsMonitor<SpotifyAc
         return new SpotifyTokens(accessToken, refreshToken);
     }
 
+    public async Task<SpotifyAccessToken> RefreshAccessToken(SpotifyRefreshToken refreshToken, CancellationToken cancellationToken)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, "token")
+        {
+            Content = new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                [Parameters.GrantType] = GrantTypes.RefreshToken,
+                [Parameters.RefreshToken] = refreshToken.Token
+            })
+        };
+
+        var response = await httpClient.SendAndDeserializeJson<RefreshAccessTokenResponse>(request, cancellationToken);
+        return new SpotifyAccessToken
+        {
+            Token = response.AccessToken,
+            ExpiresAtUtc = dateTimeProvider.UtcNow.AddSeconds(response.ExpiresInSeconds)
+        };
+    }
+
     private static class Parameters
     {
         public const string ClientId = "client_id";
@@ -74,6 +94,7 @@ public class SpotifyAccountsApi(HttpClient httpClient, IOptionsMonitor<SpotifyAc
         public const string ShowDialog = "show_dialog";
         public const string Code = "code";
         public const string GrantType = "grant_type";
+        public const string RefreshToken = "refresh_token";
     }
 
     private static class ResponseTypes
@@ -84,6 +105,7 @@ public class SpotifyAccountsApi(HttpClient httpClient, IOptionsMonitor<SpotifyAc
     private static class GrantTypes
     {
         public const string AuthorizationCode = "authorization_code";
+        public const string RefreshToken = "refresh_token";
     }
 
     private record ExchangeAuthorizationCodeForTokensResponse
@@ -96,5 +118,14 @@ public class SpotifyAccountsApi(HttpClient httpClient, IOptionsMonitor<SpotifyAc
 
         [JsonPropertyName("refresh_token")]
         public required string RefreshToken { get; set; }
+    }
+
+    private record RefreshAccessTokenResponse
+    {
+        [JsonPropertyName("access_token")]
+        public required string AccessToken { get; set; }
+
+        [JsonPropertyName("expires_in")]
+        public required int ExpiresInSeconds { get; set; }
     }
 }

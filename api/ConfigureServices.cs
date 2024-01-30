@@ -11,7 +11,7 @@ public static class ConfigureServices
         builder.AddSerilog();
         builder.AddSwagger();
         builder.AddDatabase();
-        builder.AddSpotifyAccountsApi();
+        builder.AddSpotifyApis();
         builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly, includeInternalTypes: true);
         builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
     }
@@ -38,13 +38,15 @@ public static class ConfigureServices
         });
     }
 
-    private static void AddSpotifyAccountsApi(this WebApplicationBuilder builder)
+    private static void AddSpotifyApis(this WebApplicationBuilder builder)
     {
         // Add the delegate handlers
         builder.Services.AddTransient<EnsureSuccessDelgatingHandler>();
         builder.Services.AddTransient<LoggingDelegatingHandler>();
         builder.Services.AddTransient<ClientIdAndSecretAuthenticationDelegatingHandler>();
+        builder.Services.AddTransient<BearerTokenAuthenticationDelegatingHandler>();
 
+        // Spotify Accounts API
         builder.Services.Configure<SpotifyAccountsApiOptions>(builder.Configuration.GetSection("Spotify:AccountsApi"));
         builder.Services.AddHttpClient<ISpotifyAccountsApi, SpotifyAccountsApi>(client =>
         {
@@ -54,5 +56,15 @@ public static class ConfigureServices
         .AddHttpMessageHandler<EnsureSuccessDelgatingHandler>()
         .AddHttpMessageHandler<LoggingDelegatingHandler>()
         .AddHttpMessageHandler<ClientIdAndSecretAuthenticationDelegatingHandler>();
+
+        // Web API
+        builder.Services.AddHttpClient<ISpotifyWebApi, SpotifyWebApi>(client =>
+        {
+            var baseUrl = builder.Configuration["Spotify:WebApi:BaseUrl"];
+            client.BaseAddress = new Uri(baseUrl!);
+        })
+        .AddHttpMessageHandler<EnsureSuccessDelgatingHandler>()
+        .AddHttpMessageHandler<LoggingDelegatingHandler>()
+        .AddHttpMessageHandler<BearerTokenAuthenticationDelegatingHandler>();
     }
 }

@@ -30,5 +30,6 @@ public static class Endpoints
 
         endpoints.MapGetRFIDs();
         endpoints.MapCreateOrUpdateRFIDTag();
+        endpoints.MapScanRFID();
     }
 }
