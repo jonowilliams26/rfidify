@@ -1,4 +1,5 @@
-﻿using RFIDify.Spotify.Apis.DelegatingHandlers;
+﻿using RFIDify.Services;
+using RFIDify.Spotify.Apis.DelegatingHandlers;
 using Serilog;
 
 namespace RFIDify;
@@ -12,6 +13,7 @@ public static class ConfigureServices
         builder.AddDatabase();
         builder.AddSpotifyAccountsApi();
         builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly, includeInternalTypes: true);
+        builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
     }
 
     private static void AddSwagger(this WebApplicationBuilder builder)
