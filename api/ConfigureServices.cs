@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using RFIDify.Spotify.Apis.DelegatingHandlers;
+using Serilog;
 
 namespace RFIDify;
 
@@ -37,11 +38,19 @@ public static class ConfigureServices
 
     private static void AddSpotifyAccountsApi(this WebApplicationBuilder builder)
     {
+        // Add the delegate handlers
+        builder.Services.AddTransient<EnsureSuccessDelgatingHandler>();
+        builder.Services.AddTransient<LoggingDelegatingHandler>();
+        builder.Services.AddTransient<ClientIdAndSecretAuthenticationDelegatingHandler>();
+
         builder.Services.Configure<SpotifyAccountsApiOptions>(builder.Configuration.GetSection("Spotify:AccountsApi"));
         builder.Services.AddHttpClient<ISpotifyAccountsApi, SpotifyAccountsApi>(client =>
         {
             var baseUrl = builder.Configuration["Spotify:AccountsApi:BaseUrl"];
             client.BaseAddress = new Uri(baseUrl!);
-        });
+        })
+        .AddHttpMessageHandler<EnsureSuccessDelgatingHandler>()
+        .AddHttpMessageHandler<LoggingDelegatingHandler>()
+        .AddHttpMessageHandler<ClientIdAndSecretAuthenticationDelegatingHandler>();
     }
 }
