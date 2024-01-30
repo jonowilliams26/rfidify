@@ -1,3 +1,6 @@
+global using Microsoft.EntityFrameworkCore;
+global using RFIDify.Database;
+
 using RFIDify;
 using Serilog;
 using Serilog.Events;
@@ -13,7 +16,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
     builder.AddServices();
     var app = builder.Build();
-    app.Configure();
+    await app.Configure();
     Log.Information("Starting web application. Environment: {Environment}", app.Environment.EnvironmentName);
     app.Run();
 }

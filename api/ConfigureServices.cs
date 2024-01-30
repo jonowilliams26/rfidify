@@ -8,6 +8,7 @@ public static class ConfigureServices
     {
         builder.AddSerilog();
         builder.AddSwagger();
+        builder.AddDatabase();
     }
 
     private static void AddSwagger(this WebApplicationBuilder builder)
@@ -21,6 +22,14 @@ public static class ConfigureServices
         builder.Host.UseSerilog((context, loggerConfiguration) =>
         {
             loggerConfiguration.ReadFrom.Configuration(context.Configuration);
+        });
+    }
+
+    private static void AddDatabase(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseSqlite("Data Source=database/app.db");
         });
     }
 }
