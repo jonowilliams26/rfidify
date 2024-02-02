@@ -21,6 +21,7 @@ public static class Endpoints
 
         endpoints.MapSetSpotifyCredentials();
         endpoints.MapAuthorizationCallback();
+        endpoints.MapGetTrack();
     }
 
     private static void MapRFIDEndpoints(this IEndpointRouteBuilder app)

@@ -1,9 +1,11 @@
-﻿using System.Text.Json.Serialization;
+﻿using RFIDify.Spotify.Apis.Extensions;
+using System.Text.Json.Serialization;
 
 namespace RFIDify.Spotify.Apis;
 
 public interface ISpotifyWebApi
 {
+    Task<Track> GetTrack(string id, CancellationToken cancellationToken);
     Task Play(SpotifyId id, CancellationToken cancellationToken);
 }
 
@@ -19,6 +21,8 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
 
         await httpClient.PutAsJsonAsync("me/player/play", request, cancellationToken);
     }
+
+    public Task<Track> GetTrack(string id, CancellationToken cancellationToken) => httpClient.Get<Track>($"tracks/{id}", cancellationToken);
 
     private record PlayRequest
     {

@@ -15,4 +15,10 @@ public static class HttpClientExtensions
 
         return data;
     }
+
+    public static async Task<T> Get<T>(this HttpClient httpClient, string uri, CancellationToken cancellationToken)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, uri);
+        return await httpClient.SendAndDeserializeJson<T>(request, cancellationToken);
+    }
 }
