@@ -5,6 +5,9 @@ namespace RFIDify.Spotify.Apis;
 
 public interface ISpotifyWebApi
 {
+    Task<Album> GetAlbum(string id, CancellationToken cancellationToken);
+    Task<Artist> GetArtist(string id, CancellationToken cancellationToken);
+    Task<Playlist> GetPlaylist(string id, CancellationToken cancellationToken);
     Task<Track> GetTrack(string id, CancellationToken cancellationToken);
     Task Play(SpotifyId id, CancellationToken cancellationToken);
 }
@@ -23,6 +26,9 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
     }
 
     public Task<Track> GetTrack(string id, CancellationToken cancellationToken) => httpClient.Get<Track>($"tracks/{id}", cancellationToken);
+    public Task<Playlist> GetPlaylist(string id, CancellationToken cancellationToken) => httpClient.Get<Playlist>($"playlists/{id}", cancellationToken);
+    public Task<Album> GetAlbum(string id, CancellationToken cancellationToken) => httpClient.Get<Album>($"albums/{id}", cancellationToken);
+    public Task<Artist> GetArtist(string id, CancellationToken cancellationToken) => httpClient.Get<Artist>($"artists/{id}", cancellationToken);
 
     private record PlayRequest
     {

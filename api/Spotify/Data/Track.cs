@@ -38,6 +38,6 @@ public class Playlist
 public class Image
 {
     public required string Url { get; init; }
-    public int? Height { get; init; }
-    public int? Width { get; init; }
+    public double? Height { get; init; }
+    public double? Width { get; init; }
 }
