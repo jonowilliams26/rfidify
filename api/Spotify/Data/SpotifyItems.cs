@@ -38,6 +38,7 @@ public record SpotifyAlbum : ISpotifyItem
     public required string Id { get; init; }
     public required string Uri { get; init; }
     public required string Name { get; init; }
+    public required string AlbumType { get; init; }
     public List<SpotifyArtist> Artists { get; init; } = [];
     public List<SpotifyImage> Images { get; init; } = [];
 }

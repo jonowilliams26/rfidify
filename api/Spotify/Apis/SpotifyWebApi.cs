@@ -1,7 +1,4 @@
-﻿using RFIDify.Spotify.Apis.Extensions;
-using System.Text.Json.Serialization;
-
-namespace RFIDify.Spotify.Apis;
+﻿namespace RFIDify.Spotify.Apis;
 
 public interface ISpotifyWebApi
 {
@@ -15,6 +12,8 @@ public interface ISpotifyWebApi
 
 public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
 {
+    private readonly SpotifyHttpClient httpClient = new(httpClient);
+
     public async Task Play(ISpotifyItem item, CancellationToken cancellationToken)
     {
         PlayRequest request = item.Type switch
@@ -23,7 +22,7 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
             _ => new() { ContextUri = item.Uri }
         };
 
-        await httpClient.PutAsJsonAsync("me/player/play", request, cancellationToken);
+        await httpClient.Put("me/player/play", request, cancellationToken);
     }
 
     public async Task<ISpotifyItem> Get(SpotifyUri uri, CancellationToken cancellationToken) => uri.Type switch
@@ -42,10 +41,7 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
 
     private record PlayRequest
     {
-        [JsonPropertyName("context_uri")]
         public string? ContextUri { get; init; }
-
-        [JsonPropertyName("uris")]
         public string[]? Uris { get; init; }
     }
 }

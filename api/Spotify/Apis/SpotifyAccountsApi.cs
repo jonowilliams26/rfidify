@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using RFIDify.Services;
-using RFIDify.Spotify.Apis.Extensions;
-using System.Text.Json.Serialization;
 
 namespace RFIDify.Spotify.Apis;
 
@@ -20,6 +18,8 @@ public class SpotifyAccountsApiOptions
 
 public class SpotifyAccountsApi(HttpClient httpClient, IOptionsMonitor<SpotifyAccountsApiOptions> options, IDateTimeProvider dateTimeProvider) : ISpotifyAccountsApi
 {
+    private readonly SpotifyHttpClient httpClient = new(httpClient);
+
     public Uri GenerateAuthorizationUri(SpotifyCredentials credentials, SpotifyAuthorizationState authorizationState)
     {
         var uri = httpClient.BaseAddress!.AbsoluteUri.Replace("/api", "/authorize");
@@ -39,22 +39,19 @@ public class SpotifyAccountsApi(HttpClient httpClient, IOptionsMonitor<SpotifyAc
 
     public async Task<SpotifyTokens> ExchangeAuthorizationCodeForTokens(string authorizationCode, SpotifyAuthorizationState authorizationState, CancellationToken cancellationToken)
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, "token")
+        var request = new Dictionary<string, string>
         {
-            Content = new FormUrlEncodedContent(new Dictionary<string, string>
-            {
-                [Parameters.RedirectUri] = authorizationState.RedirectUri,
-                [Parameters.Code] = authorizationCode,
-                [Parameters.GrantType] = GrantTypes.AuthorizationCode
-            })
+            [Parameters.RedirectUri] = authorizationState.RedirectUri,
+            [Parameters.Code] = authorizationCode,
+            [Parameters.GrantType] = GrantTypes.AuthorizationCode
         };
 
-        var response = await httpClient.SendAndDeserializeJson<ExchangeAuthorizationCodeForTokensResponse>(request, cancellationToken);
+        var response = await httpClient.Post<ExchangeAuthorizationCodeForTokensResponse>("token", request, cancellationToken);
 
         var accessToken = new SpotifyAccessToken
         {
             Token = response.AccessToken,
-            ExpiresAtUtc = dateTimeProvider.UtcNow.AddSeconds(response.ExpiresInSeconds)
+            ExpiresAtUtc = dateTimeProvider.UtcNow.AddSeconds(response.ExpiresIn)
         };
 
         var refreshToken = new SpotifyRefreshToken
@@ -67,20 +64,17 @@ public class SpotifyAccountsApi(HttpClient httpClient, IOptionsMonitor<SpotifyAc
 
     public async Task<SpotifyAccessToken> RefreshAccessToken(SpotifyRefreshToken refreshToken, CancellationToken cancellationToken)
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, "token")
+        var request = new Dictionary<string, string>
         {
-            Content = new FormUrlEncodedContent(new Dictionary<string, string>
-            {
-                [Parameters.GrantType] = GrantTypes.RefreshToken,
-                [Parameters.RefreshToken] = refreshToken.Token
-            })
+            [Parameters.GrantType] = GrantTypes.RefreshToken,
+            [Parameters.RefreshToken] = refreshToken.Token
         };
 
-        var response = await httpClient.SendAndDeserializeJson<RefreshAccessTokenResponse>(request, cancellationToken);
+        var response = await httpClient.Post<RefreshAccessTokenResponse>("token", request, cancellationToken);
         return new SpotifyAccessToken
         {
             Token = response.AccessToken,
-            ExpiresAtUtc = dateTimeProvider.UtcNow.AddSeconds(response.ExpiresInSeconds)
+            ExpiresAtUtc = dateTimeProvider.UtcNow.AddSeconds(response.ExpiresIn)
         };
     }
 
@@ -110,22 +104,14 @@ public class SpotifyAccountsApi(HttpClient httpClient, IOptionsMonitor<SpotifyAc
 
     private record ExchangeAuthorizationCodeForTokensResponse
     {
-        [JsonPropertyName("access_token")]
         public required string AccessToken { get; set; }
-
-        [JsonPropertyName("expires_in")]
-        public required int ExpiresInSeconds { get; set; }
-
-        [JsonPropertyName("refresh_token")]
+        public required int ExpiresIn { get; set; }
         public required string RefreshToken { get; set; }
     }
 
     private record RefreshAccessTokenResponse
     {
-        [JsonPropertyName("access_token")]
         public required string AccessToken { get; set; }
-
-        [JsonPropertyName("expires_in")]
-        public required int ExpiresInSeconds { get; set; }
+        public required int ExpiresIn { get; set; }
     }
 }
