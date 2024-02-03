@@ -1,6 +1,7 @@
 ﻿using RFIDify.Services;
 using RFIDify.Spotify.Apis.DelegatingHandlers;
 using Serilog;
+using System.Text.Json.Serialization;
 
 namespace RFIDify;
 
@@ -9,11 +10,27 @@ public static class ConfigureServices
     public static void AddServices(this WebApplicationBuilder builder)
     {
         builder.AddSerilog();
+        builder.AddJsonSerialization();
         builder.AddSwagger();
         builder.AddDatabase();
         builder.AddSpotifyApis();
         builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly, includeInternalTypes: true);
         builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+    }
+
+    private static void AddJsonSerialization(this WebApplicationBuilder builder)
+    {
+        builder.Services.ConfigureHttpJsonOptions(options => 
+        {
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
+
+        // Need this because of an open issue in the Swagger generator
+        // See: https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2293
+        builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
     }
 
     private static void AddSwagger(this WebApplicationBuilder builder)
