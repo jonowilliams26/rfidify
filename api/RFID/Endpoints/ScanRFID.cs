@@ -27,7 +27,7 @@ public static class ScanRFID
             return TypedResults.NotFound();
         }
 
-        await api.Play(rfid.SpotifyId, cancellationToken);
+        await api.Play(rfid.SpotifyItem, cancellationToken);
         return TypedResults.Ok();
     }
 }

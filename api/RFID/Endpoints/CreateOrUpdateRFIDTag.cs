@@ -1,15 +1,15 @@
 ﻿namespace RFIDify.RFID.Endpoints;
 
-public record CreateOrUpdateRFIDTagRequest(string RFID, string SpotifyId);
+public record CreateOrUpdateRFIDTagRequest(string RFID, string SpotifyUri);
 public class CreateOrUpdateRFIDTagRequestValidator : AbstractValidator<CreateOrUpdateRFIDTagRequest>
 {
     public CreateOrUpdateRFIDTagRequestValidator()
     {
         RuleFor(x => x.RFID).NotEmpty();
-        RuleFor(x => x.SpotifyId)
+        RuleFor(x => x.SpotifyUri)
             .NotEmpty()
-            .Must(SpotifyId.IsValid)
-            .WithMessage("Invalid Spotify ID");
+            .Must(SpotifyUri.IsValid)
+            .WithMessage("Invalid Spotify Uri");
     }
 }
 
@@ -20,28 +20,25 @@ public static class CreateOrUpdateRFIDTag
         .WithSummary("Create or update an RFID tag")
         .WithRequestValidation<CreateOrUpdateRFIDTagRequest>();
 
-    private static async Task<Results<Ok, Created>> Handle(CreateOrUpdateRFIDTagRequest request, AppDbContext database, ILogger<CreateOrUpdateRFIDTagRequest> logger, CancellationToken cancellationToken)
+    private static async Task<Results<Ok, Created>> Handle(CreateOrUpdateRFIDTagRequest request, AppDbContext database, ILogger<CreateOrUpdateRFIDTagRequest> logger, ISpotifyWebApi api, CancellationToken cancellationToken)
     {
-        // TODO: Confirm spotify id exists
+        var uri = new SpotifyUri(request.SpotifyUri);
+        var item = await api.Get(uri, cancellationToken);
 
         var rfid = await database.RFIDs.SingleOrDefaultAsync(x => x.Id == request.RFID, cancellationToken);
-
         if (rfid is null)
         {
-            logger.LogInformation("Creating RFID {RFID} - {SpotifyId}", request.RFID, request.SpotifyId);
-            rfid = new RFIDTag
-            {
+            rfid = new RFIDTag 
+            { 
                 Id = request.RFID,
-                SpotifyId = new SpotifyId(request.SpotifyId)
+                SpotifyItem = item
             };
-
             await database.RFIDs.AddAsync(rfid, cancellationToken);
             await database.SaveChangesAsync(cancellationToken);
             return TypedResults.Created();
         }
 
-        logger.LogInformation("Updating RFID {RFID} to {SpotifyId}", request.RFID, request.SpotifyId);
-        rfid.SpotifyId = new SpotifyId(request.SpotifyId);
+        rfid.SpotifyItem = item;
         await database.SaveChangesAsync(cancellationToken);
         return TypedResults.Ok();
     }

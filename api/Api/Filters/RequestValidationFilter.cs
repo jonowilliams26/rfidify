@@ -26,7 +26,7 @@ public class RequestValidationFilter<TRequest>(IValidator<TRequest> validator, I
 
 public static class RequestValidationFilterExtensions
 {
-    public static IEndpointConventionBuilder WithRequestValidation<TRequest>(this RouteHandlerBuilder builder)
+    public static RouteHandlerBuilder WithRequestValidation<TRequest>(this RouteHandlerBuilder builder)
     {
         builder.AddEndpointFilter<RequestValidationFilter<TRequest>>()
             .ProducesValidationProblem();

@@ -16,8 +16,7 @@ namespace RFIDify.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    SpotifyId_Id = table.Column<string>(type: "TEXT", nullable: false),
-                    SpotifyId_Type = table.Column<int>(type: "INTEGER", nullable: false)
+                    SpotifyItem = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

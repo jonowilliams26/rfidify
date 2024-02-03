@@ -3,5 +3,5 @@
 public class RFIDTag
 {
     public required string Id { get; init; }
-    public required SpotifyId SpotifyId { get; set; }
+    public required ISpotifyItem SpotifyItem { get; set; }
 }
