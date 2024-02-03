@@ -36,7 +36,7 @@ public static class ConfigureServices
     private static void AddSwagger(this WebApplicationBuilder builder)
     {
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c => c.UseOneOfForPolymorphism());
     }
 
     private static void AddSerilog(this WebApplicationBuilder builder)

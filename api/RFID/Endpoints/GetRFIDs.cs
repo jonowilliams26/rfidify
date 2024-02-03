@@ -1,4 +1,17 @@
-﻿namespace RFIDify.RFID.Endpoints;
+﻿using System.Text.Json.Serialization;
+
+namespace RFIDify.RFID.Endpoints;
+
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(GetRFIDsResponseTrack), typeDiscriminator: nameof(SpotifyItemType.Track))]
+[JsonDerivedType(typeof(GetRFIDsResponseAlbum), typeDiscriminator: nameof(SpotifyItemType.Album))]
+[JsonDerivedType(typeof(GetRFIDsResponseArtist), typeDiscriminator: nameof(SpotifyItemType.Artist))]
+[JsonDerivedType(typeof(GetRFIDsResponsePlaylist), typeDiscriminator: nameof(SpotifyItemType.Playlist))]
+public abstract record GetRFIDsResponseItem { }
+public record GetRFIDsResponseArtist(string RFID, string Name, Uri? Image) : GetRFIDsResponseItem;
+public record GetRFIDsResponseAlbum(string RFID, string Name, List<string> Artists, Uri? Image) : GetRFIDsResponseItem;
+public record GetRFIDsResponseTrack(string RFID, string Name, List<string> Artists, Uri? Image) : GetRFIDsResponseItem;
+public record GetRFIDsResponsePlaylist(string RFID, string Name, string? Description, Uri? Image) : GetRFIDsResponseItem;
 
 public static class GetRFIDs
 {
@@ -6,12 +19,21 @@ public static class GetRFIDs
         .MapGet("/", Handle)
         .WithSummary("Get all RFID tags");
 
-    private static async Task<Ok<List<RFIDTag>>> Handle(AppDbContext database, CancellationToken cancellationToken)
+    private static async Task<Ok<List<GetRFIDsResponseItem>>> Handle(AppDbContext database, CancellationToken cancellationToken)
     {
         var rfids = await database.RFIDs
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-        return TypedResults.Ok(rfids);
+        var response = rfids.Select<RFIDTag, GetRFIDsResponseItem>(x => x.SpotifyItem switch
+        {
+            SpotifyTrack track => new GetRFIDsResponseTrack(x.Id, track.Name, track.Artists.Select(x => x.Name).ToList(), track.Album.Images.FirstOrDefault()?.Url),
+            SpotifyAlbum album => new GetRFIDsResponseAlbum(x.Id, album.Name, album.Artists.Select(x => x.Name).ToList(), album.Images.FirstOrDefault()?.Url),
+            SpotifyArtist artist => new GetRFIDsResponseArtist(x.Id, artist.Name, artist.Images.FirstOrDefault()?.Url),
+            SpotifyPlaylist playlist => new GetRFIDsResponsePlaylist(x.Id, playlist.Name, playlist.Description, playlist.Images.FirstOrDefault()?.Url),
+            _ => throw new NotImplementedException()
+        }).ToList();
+
+        return TypedResults.Ok(response);
     }
 }

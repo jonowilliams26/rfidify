@@ -38,7 +38,6 @@ public record SpotifyAlbum : ISpotifyItem
     public required string Id { get; init; }
     public required string Uri { get; init; }
     public required string Name { get; init; }
-    public required string AlbumType { get; init; }
     public List<SpotifyArtist> Artists { get; init; } = [];
     public List<SpotifyImage> Images { get; init; } = [];
 }
@@ -64,7 +63,7 @@ public record SpotifyPlaylist : ISpotifyItem
 
 public record SpotifyImage
 {
-    public required string Url { get; init; }
+    public required Uri Url { get; init; }
     public double? Width { get; init; }
     public double? Height { get; init; }
 }
