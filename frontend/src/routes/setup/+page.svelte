@@ -3,7 +3,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
-	import { setSpotifyCredentials } from '$lib/api';
+	import { setSpotifyCredentials } from '$lib/http/api';
     import { toastError } from '$lib/toasts';
 
 	let clientId = '';
@@ -20,7 +20,7 @@
             redirectUri: `${window.location.origin}/setup/callback`
         });
 
-        if (response.failed) {
+        if (!response.ok) {
             toastError();
             loading = false;
             return;
