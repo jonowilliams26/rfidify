@@ -1,6 +1,6 @@
-import { put } from "./fetch";
+import { put, post } from "./fetch";
 
-export type SetSpotifyCredentialsRequest = {
+type SetSpotifyCredentialsRequest = {
     clientId: string;
     clientSecret: string;
     redirectUri: string;
@@ -10,4 +10,12 @@ type SetSpotifyCredentialsResponse = {
 }
 export async function setSpotifyCredentials(request: SetSpotifyCredentialsRequest) {
     return await put<SetSpotifyCredentialsResponse>('/spotify/credentials', request);
+}
+
+type AuthorizeSpotifyRequest = {
+    code: string;
+    state: string;
+}
+export async function authorizeSpotify(request: AuthorizeSpotifyRequest) {
+    return await post('/spotify/authorize', request);
 }

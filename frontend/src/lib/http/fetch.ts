@@ -89,3 +89,7 @@ function jsonOptions(method: "POST" | "PUT", body?: any): RequestInit {
 export async function put<TResponse>(path: string, body: any): Promise<ApiResponseWithData<TResponse>> {
     return fetchJson(path, jsonOptions("PUT", body));
 }
+
+export async function post(path: string, body: any): Promise<ApiResponse> {
+    return fetchResponse(path, jsonOptions("POST", body));
+}
