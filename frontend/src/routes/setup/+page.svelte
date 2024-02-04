@@ -30,6 +30,7 @@
 	}
 </script>
 
+<div class="flex items-center h-screen">
 <Card.Root class="m-auto max-w-lg">
 	<Card.Header class="text-center">
 		<Card.Title class="text-2xl">
@@ -63,3 +64,4 @@
 		<Button class="w-full" on:click={authorize} {disabled}>Authorize</Button>
 	</Card.CardContent>
 </Card.Root>
+</div>
