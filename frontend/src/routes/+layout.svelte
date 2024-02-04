@@ -2,6 +2,7 @@
 	import '../app.pcss';
 	import { HamburgerMenu } from 'radix-icons-svelte';
 	import { Button } from '$lib/components/ui/button';
+	import { Toaster } from "$lib/components/ui/sonner";
 
 	const navigation = [
 		{ name: 'Dashboard', href: '/' },
@@ -13,7 +14,13 @@
 	function toggleMenu() {
 		isOpen = !isOpen;
 	}
+
+	function handleError(event: Event) {
+		console.error("test test");
+	}
 </script>
+
+<Toaster />
 
 <div class="min-h-full">
 	<nav class="border-b border-accent">
@@ -21,7 +28,7 @@
 			<div class="flex h-16 justify-between">
 				<div class="flex">
 					<div class="flex flex-shrink-0 items-center">
-						<img class="block h-8 w-auto" src="spotify-logo.png" alt="RFIDify" />
+						<img class="block h-8 w-auto" src="/spotify-logo.png" alt="RFIDify" />
 						<p class="pl-1 font-bold text-primary">RFIDify</p>
 					</div>
 					<div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">

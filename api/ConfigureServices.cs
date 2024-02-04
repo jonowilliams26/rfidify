@@ -9,6 +9,7 @@ public static class ConfigureServices
 {
     public static void AddServices(this WebApplicationBuilder builder)
     {
+        builder.AddCors();
         builder.AddSerilog();
         builder.AddJsonSerialization();
         builder.AddSwagger();
@@ -30,6 +31,19 @@ public static class ConfigureServices
         builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
+    }
+
+    private static void AddCors(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
         });
     }
 

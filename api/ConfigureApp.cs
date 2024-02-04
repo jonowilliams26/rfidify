@@ -11,6 +11,7 @@ public static class ConfigureApp
         app.UseSwagger();
         app.UseSwaggerUI();
         app.UseHttpsRedirection();
+        app.UseCors();
         app.MapEndpoints();
         await app.EnsureDatabaseCreated();
     }
