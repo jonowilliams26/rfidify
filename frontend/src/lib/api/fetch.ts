@@ -93,3 +93,7 @@ export async function put<TResponse>(path: string, body: any): Promise<ApiRespon
 export async function post(path: string, body: any): Promise<ApiResponse> {
     return fetchResponse(path, jsonOptions("POST", body));
 }
+
+export async function get<TResponse>(path: string): Promise<ApiResponseWithData<TResponse>> {
+    return fetchJson(path);
+}
