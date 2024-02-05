@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { authorizeSpotify } from '$lib/http/api';
+import { authorizeSpotify } from '$lib/api/endpoints/authorizeSpotify';
 import { error, redirect } from '@sveltejs/kit';
 
 export const load = (async ({ url }) => {
