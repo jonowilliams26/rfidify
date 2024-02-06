@@ -1,4 +1,4 @@
-import authorizeSpotify from '$lib/api/endpoints/authorizeSpotify';
+import authorizeSpotify from '$lib/api/endpoints/spotify/authorizeSpotify';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 

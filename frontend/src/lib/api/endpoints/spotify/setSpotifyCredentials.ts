@@ -1,4 +1,4 @@
-import { type FetchFn, putJson } from "../fetch";
+import { type FetchFn, putJson } from "../../fetch";
 
 type SetSpotifyCredentialsRequest = {
     clientId: string;

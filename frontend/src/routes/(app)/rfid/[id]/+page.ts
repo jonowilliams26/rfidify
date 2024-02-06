@@ -1,5 +1,5 @@
 import type { PageLoad } from './$types';
-import getRFIDById from '$lib/api/endpoints/getRFIDById';
+import getRFIDById from '$lib/api/endpoints/rfid/getRFIDById';
 import { error } from '@sveltejs/kit';
 
 export const load = (async ({ params, fetch }) => {

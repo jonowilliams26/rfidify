@@ -1,4 +1,4 @@
-import { post, type FetchFn } from "../fetch";
+import { post, type FetchFn } from "../../fetch";
 
 type AuthorizeSpotifyRequest = {
     code: string;
