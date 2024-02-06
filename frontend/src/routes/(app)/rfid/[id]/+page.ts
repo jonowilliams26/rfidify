@@ -9,6 +9,7 @@ export const load = (async ({ params, fetch }) => {
 
     if (response.isHttpError && response.error.status === 404) {
         return {
+            id: id,
             rfid: undefined
         };
     }
@@ -18,6 +19,7 @@ export const load = (async ({ params, fetch }) => {
     }
 
     return {
+        id: id,
         rfid: response.data
     };
 

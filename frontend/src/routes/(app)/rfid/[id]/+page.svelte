@@ -1,13 +1,12 @@
 <script lang="ts">
     import type { PageData } from './$types';
-    
+    import { RFID, EmptyRFID } from '$lib/components/rfid';
     export let data: PageData;
-    const { rfid } = data;
-
+    const { id, rfid } = data;
 </script>
 
 {#if !rfid}
-    <p>RFID not found</p>
+    <EmptyRFID id={id} />
 {:else}
-    <p>RFID found</p>
+    <RFID rfid={rfid} showOptionsMenu={false} />
 {/if}
