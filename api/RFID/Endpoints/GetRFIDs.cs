@@ -7,11 +7,11 @@ namespace RFIDify.RFID.Endpoints;
 [JsonDerivedType(typeof(GetRFIDsResponseAlbum), typeDiscriminator: nameof(SpotifyItemType.Album))]
 [JsonDerivedType(typeof(GetRFIDsResponseArtist), typeDiscriminator: nameof(SpotifyItemType.Artist))]
 [JsonDerivedType(typeof(GetRFIDsResponsePlaylist), typeDiscriminator: nameof(SpotifyItemType.Playlist))]
-public abstract record GetRFIDsResponseItem { }
-public record GetRFIDsResponseArtist(string RFID, string Name, Uri? Image) : GetRFIDsResponseItem;
-public record GetRFIDsResponseAlbum(string RFID, string Name, List<string> Artists, Uri? Image) : GetRFIDsResponseItem;
-public record GetRFIDsResponseTrack(string RFID, string Name, List<string> Artists, Uri? Image) : GetRFIDsResponseItem;
-public record GetRFIDsResponsePlaylist(string RFID, string Name, string? Description, Uri? Image) : GetRFIDsResponseItem;
+public abstract record GetRFIDsResponseItem(string Id);
+public record GetRFIDsResponseArtist(string Id, string Name, Uri? Image) : GetRFIDsResponseItem(Id);
+public record GetRFIDsResponseAlbum(string Id, string Name, List<string> Artists, Uri? Image) : GetRFIDsResponseItem(Id);
+public record GetRFIDsResponseTrack(string Id, string Name, List<string> Artists, Uri? Image) : GetRFIDsResponseItem(Id);
+public record GetRFIDsResponsePlaylist(string Id, string Name, string? Description, Uri? Image) : GetRFIDsResponseItem(Id);
 
 public static class GetRFIDs
 {

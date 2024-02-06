@@ -1,7 +1,6 @@
 import { get } from '$lib/api/fetch';
 
-type GetRFIDsResponse = GetRFIDsResponseItem[];
-type GetRFIDsResponseItem = Track | Album | Playlist | Artist;
+type GetRFIDByIdResponse = Track | Album | Playlist | Artist;
 
 type RFID = {
     rfid: string;
@@ -28,6 +27,6 @@ type Artist = {
     type: "Artist";
 } & RFID;
 
-export async function getRFIDs() {
-    return await get<GetRFIDsResponse>('/rfids');
+export async function getRFIDById(id: string) {
+    return await get<GetRFIDByIdResponse>(`/rfids/${id}`);
 }

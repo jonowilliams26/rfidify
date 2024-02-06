@@ -23,10 +23,13 @@
 								</Button>
 							</DropdownMenu.Trigger>
 							<DropdownMenu.Content>
-								<DropdownMenu.Item>
-									<Pencil1 class="mr-1.5" />
-									Edit
-								</DropdownMenu.Item>
+								<a href={`/rfid/${rfid.rfid}`}>
+									<DropdownMenu.Item>
+										<Pencil1 class="mr-1.5" />
+										Edit
+									</DropdownMenu.Item>
+								</a>
+
 								<DropdownMenu.Separator />
 								<DropdownMenu.Item>
 									<Trash class="mr-1.5" />
@@ -35,7 +38,7 @@
 							</DropdownMenu.Content>
 						</DropdownMenu.Root>
 					</div>
-					<div class="text-xs text-muted-foreground truncate space-y-1">
+					<div class="space-y-1 truncate text-xs text-muted-foreground">
 						{#if rfid.type === 'Track' || rfid.type === 'Album'}
 							<div class="flex space-x-1">
 								<Person />
@@ -45,10 +48,10 @@
 						{#if rfid.type === 'Playlist'}
 							<span class="truncate">{rfid.description}</span>
 						{/if}
-                        <div class="flex space-x-1">
-                            <Link2 />
-                            <span>{rfid.rfid}</span>
-                        </div>
+						<div class="flex space-x-1">
+							<Link2 />
+							<span>{rfid.rfid}</span>
+						</div>
 					</div>
 				</div>
 			</Card.Content>

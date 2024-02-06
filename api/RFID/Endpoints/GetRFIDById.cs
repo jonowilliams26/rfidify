@@ -17,11 +17,11 @@ public class GetRFIDByIdRequestValidator : AbstractValidator<GetRFIDByIdRequest>
 [JsonDerivedType(typeof(GetRFIDByIdResponseAlbum), typeDiscriminator: nameof(SpotifyItemType.Album))]
 [JsonDerivedType(typeof(GetRFIDByIdResponseArtist), typeDiscriminator: nameof(SpotifyItemType.Artist))]
 [JsonDerivedType(typeof(GetRFIDByIdResponsePlaylist), typeDiscriminator: nameof(SpotifyItemType.Playlist))]
-public abstract record GetRFIDByIdResponse { }
-public record GetRFIDByIdResponseArtist(string RFID, string Name, Uri? Image) : GetRFIDByIdResponse;
-public record GetRFIDByIdResponseAlbum(string RFID, string Name, List<string> Artists, Uri? Image) : GetRFIDByIdResponse;
-public record GetRFIDByIdResponseTrack(string RFID, string Name, List<string> Artists, Uri? Image) : GetRFIDByIdResponse;
-public record GetRFIDByIdResponsePlaylist(string RFID, string Name, string? Description, Uri? Image) : GetRFIDByIdResponse;
+public abstract record GetRFIDByIdResponse(string Id);
+public record GetRFIDByIdResponseArtist(string Id, string Name, Uri? Image) : GetRFIDByIdResponse(Id);
+public record GetRFIDByIdResponseAlbum(string Id, List<string> Artists, Uri? Image) : GetRFIDByIdResponse(Id);
+public record GetRFIDByIdResponseTrack(string Id, string Name, List<string> Artists, Uri? Image) : GetRFIDByIdResponse(Id);
+public record GetRFIDByIdResponsePlaylist(string Id, string Name, string? Description, Uri? Image) : GetRFIDByIdResponse(Id);
 
 public static class GetRFIDById
 {
