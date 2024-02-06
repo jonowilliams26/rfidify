@@ -1,10 +1,6 @@
-﻿using RFIDify.RFID.Endpoints.Dtos;
-using System.Text.Json.Serialization;
-
-namespace RFIDify.RFID.Endpoints;
+﻿namespace RFIDify.RFID.Endpoints;
 
 public record GetRFIDByIdRequest(string Id);
-
 public class GetRFIDByIdRequestValidator : AbstractValidator<GetRFIDByIdRequest>
 {
     public GetRFIDByIdRequestValidator()
@@ -19,7 +15,7 @@ public static class GetRFIDById
         .MapGet("/{id}", Handle)
         .WithSummary("Get an RFID tag by its ID");
 
-    private static async Task<Results<Ok<RFIDDto>, NotFound>> Handle([AsParameters] GetRFIDByIdRequest request, AppDbContext database, CancellationToken cancellationToken)
+    private static async Task<Results<Ok<RFIDTag>, NotFound>> Handle([AsParameters] GetRFIDByIdRequest request, AppDbContext database, CancellationToken cancellationToken)
     {
         var rfid = await database.RFIDs
             .AsNoTracking()
@@ -30,8 +26,6 @@ public static class GetRFIDById
             return TypedResults.NotFound();
         }
 
-        var response = RFIDDto.Create(rfid);
-
-        return TypedResults.Ok(response);
+        return TypedResults.Ok(rfid);
     }
 }

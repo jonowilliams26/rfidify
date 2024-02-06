@@ -1,9 +1,6 @@
 import { type FetchFn, getJson } from "../../fetch";
-import type { RFIDTrack, RFIDAlbum, RFIDPlaylist, RFIDArtist } from "../../types/RFID";
-
-type GetRFIDsResponse = GetRFIDsResponseItem[];
-type GetRFIDsResponseItem = RFIDTrack | RFIDAlbum | RFIDPlaylist | RFIDArtist;
+import type { RFID } from "../../types/RFID";
 
 export default async function getRFIDs(fetch: FetchFn) {
-    return await getJson<GetRFIDsResponse>(fetch, '/rfids');
+    return await getJson<RFID[]>(fetch, '/rfids');
 }

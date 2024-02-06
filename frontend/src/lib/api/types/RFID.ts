@@ -1,23 +1,39 @@
 export type RFID = {
     id: string;
-    name: string;
-    image?: string;
+    spotifyItem: SpotifyTrack | SpotifyArtist | SpotifyAlbum | SpotifyPlaylist;
 }
-export type RFIDTrack = {
+
+type SpotifyItem = {
+    id: string;
+    uri: string;
+    name: string;
+};
+
+type SpotifyTrack = {
     type: "Track";
-    artists: string[]
-} & RFID;
+    artists: SpotifyArtist[];
+    album: SpotifyAlbum;
+} & SpotifyItem;
 
-export type RFIDAlbum = {
+type SpotifyArtist = {
+    type: "Artist";
+    images: SpotifyImage[];
+} & SpotifyItem;
+
+type SpotifyAlbum = {
     type: "Album";
-    artists: string[];
-} & RFID;
+    images: SpotifyImage[];
+    artists: SpotifyArtist[];
+} & SpotifyItem;
 
-export type RFIDPlaylist = {
+type SpotifyPlaylist = { 
     type: "Playlist";
     description?: string;
-} & RFID;
+    images: SpotifyImage[];
+} & SpotifyItem;
 
-export type RFIDArtist = {
-    type: "Artist";
-} & RFID;
+export type SpotifyImage = {
+    url: string;
+    height?: number;
+    width?: number;
+}

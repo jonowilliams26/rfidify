@@ -6,12 +6,12 @@ namespace RFIDify.Spotify.Data;
 [JsonDerivedType(typeof(SpotifyAlbum), typeDiscriminator: nameof(SpotifyItemType.Album))]
 [JsonDerivedType(typeof(SpotifyArtist), typeDiscriminator: nameof(SpotifyItemType.Artist))]
 [JsonDerivedType(typeof(SpotifyPlaylist), typeDiscriminator: nameof(SpotifyItemType.Playlist))]
-public interface ISpotifyItem
+public abstract record SpotifyItem
 {
-    SpotifyItemType Type { get; }
-    string Id { get; }
-    string Uri { get; }
-    string Name { get; }
+    public abstract SpotifyItemType Type { get; }
+    public required string Id { get; init; }
+    public required string Uri { get; init; }
+    public required string Name { get; init; }
 }
 
 public enum SpotifyItemType
@@ -22,41 +22,29 @@ public enum SpotifyItemType
     Track
 }
 
-public record SpotifyTrack : ISpotifyItem
+public record SpotifyTrack : SpotifyItem
 {
-    public SpotifyItemType Type => SpotifyItemType.Track;
-    public required string Id { get; init; }
-    public required string Uri { get; init; }
-    public required string Name { get; init; }
+    public override SpotifyItemType Type => SpotifyItemType.Track;
     public required SpotifyAlbum Album { get; init; }
     public List<SpotifyArtist> Artists { get; init; } = [];
 }
 
-public record SpotifyAlbum : ISpotifyItem
+public record SpotifyAlbum : SpotifyItem
 {
-    public SpotifyItemType Type => SpotifyItemType.Album;
-    public required string Id { get; init; }
-    public required string Uri { get; init; }
-    public required string Name { get; init; }
+    public override SpotifyItemType Type => SpotifyItemType.Album;
     public List<SpotifyArtist> Artists { get; init; } = [];
     public List<SpotifyImage> Images { get; init; } = [];
 }
 
-public record SpotifyArtist : ISpotifyItem
+public record SpotifyArtist : SpotifyItem
 {
-    public SpotifyItemType Type => SpotifyItemType.Artist;
-    public required string Id { get; init; }
-    public required string Uri { get; init; }
-    public required string Name { get; init; }
+    public override SpotifyItemType Type => SpotifyItemType.Artist;
     public List<SpotifyImage> Images { get; init; } = [];
 }
 
-public record SpotifyPlaylist : ISpotifyItem
+public record SpotifyPlaylist : SpotifyItem
 {
-    public SpotifyItemType Type => SpotifyItemType.Playlist;
-    public required string Id { get; init; }
-    public required string Uri { get; init; }
-    public required string Name { get; init; }
+    public override SpotifyItemType Type => SpotifyItemType.Playlist;
     public string? Description { get; init; }
     public List<SpotifyImage> Images { get; init; } = [];
 }
