@@ -9,18 +9,18 @@
 
 <div class="min-h-full">
 	<nav class="border-b border-accent">
-		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+		<div class="mx-auto max-w-7xl px-2">
 			<div class="flex h-16 items-center justify-between">
-				<div class="flex">
+				<div class="flex items-center h-full">
 					<a href="/">
 						<img class="block h-8 w-auto" src="/spotify-logo.png" alt="RFIDify" />
 					</a>
 
-					<div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
+					<div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8 h-full">
 						{#each navigation as item}
 							<a
 								href={item.href}
-								class="inline-flex items-center px-1 pt-1 text-sm font-medium hover:border-b hover:border-primary hover:text-foreground/80"
+								class="inline-flex items-center h-full px-1 pt-1 text-sm font-medium hover:border-b hover:border-primary hover:text-foreground/80"
 							>
 								{item.name}
 							</a>
@@ -37,7 +37,7 @@
 
 	<div class="py-10">
 		<main>
-			<div class="mx-auto max-w-7xl px-3 lg:px-8">
+			<div class="mx-auto max-w-7xl px-2">
 				<slot />
 			</div>
 		</main>
