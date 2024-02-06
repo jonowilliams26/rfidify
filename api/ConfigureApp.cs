@@ -1,4 +1,5 @@
 ﻿using RFIDify.Api;
+using RFIDify.RFID.Hubs;
 using Serilog;
 
 namespace RFIDify;
@@ -13,6 +14,7 @@ public static class ConfigureApp
         app.UseHttpsRedirection();
         app.UseCors();
         app.MapEndpoints();
+        app.MapHub<RFIDHub>("/rfidhub");
         await app.EnsureDatabaseCreated();
     }
 

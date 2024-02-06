@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import * as Card from '$lib/components/ui/card';
-	import { Person, Link2, DotsHorizontal, Trash, Pencil1 } from 'radix-icons-svelte';
+	import { Person, Link2, DotsHorizontal, Trash, Pencil1, Rocket } from 'radix-icons-svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 

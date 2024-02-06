@@ -17,6 +17,7 @@ public static class ConfigureServices
         builder.AddSpotifyApis();
         builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly, includeInternalTypes: true);
         builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        builder.Services.AddSignalR();
     }
 
     private static void AddJsonSerialization(this WebApplicationBuilder builder)

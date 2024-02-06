@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { HamburgerMenu } from 'radix-icons-svelte';
+	import { HamburgerMenu, Rocket } from 'radix-icons-svelte';
 	import { Button } from '$lib/components/ui/button';
 
 	const navigation = [
@@ -17,12 +17,12 @@
 <div class="min-h-full">
 	<nav class="border-b border-accent">
 		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-			<div class="flex h-16 justify-between">
+			<div class="flex h-16 items-center justify-between">
 				<div class="flex">
-					<div class="flex flex-shrink-0 items-center">
+					<a href="/">
 						<img class="block h-8 w-auto" src="/spotify-logo.png" alt="RFIDify" />
-						<p class="pl-1 font-bold text-primary">RFIDify</p>
-					</div>
+					</a>
+
 					<div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
 						{#each navigation as item}
 							<a
@@ -34,7 +34,10 @@
 						{/each}
 					</div>
 				</div>
-
+				<Button href="/rfid/scan" size="sm">
+					<Rocket class="mr-1.5" />
+					New RFID
+				</Button>
 				<div class="-mr-2 flex items-center sm:hidden">
 					<Button variant="outline" size="icon" on:click={toggleMenu}>
 						<HamburgerMenu className="h-4 w-4" />
@@ -61,7 +64,7 @@
 
 	<div class="py-10">
 		<main>
-			<div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-7xl px-3 lg:px-8">
 				<slot />
 			</div>
 		</main>
