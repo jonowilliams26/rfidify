@@ -1,17 +1,10 @@
 <script lang="ts">
-	import { HamburgerMenu, Rocket } from 'radix-icons-svelte';
+	import { Rocket } from 'radix-icons-svelte';
 	import { Button } from '$lib/components/ui/button';
 
 	const navigation = [
-		{ name: 'Dashboard', href: '/' },
-		{ name: 'Scan', href: '/scan' }
+		{ name: 'Dashboard', href: '/' }
 	];
-
-	let isOpen = false;
-
-	function toggleMenu() {
-		isOpen = !isOpen;
-	}
 </script>
 
 <div class="min-h-full">
@@ -38,28 +31,8 @@
 					<Rocket class="mr-1.5" />
 					New RFID
 				</Button>
-				<div class="-mr-2 flex items-center sm:hidden">
-					<Button variant="outline" size="icon" on:click={toggleMenu}>
-						<HamburgerMenu className="h-4 w-4" />
-					</Button>
-				</div>
 			</div>
 		</div>
-
-		{#if isOpen}
-			<div class="sm:hidden" id="mobile-menu">
-				<div class="space-y-1 pb-3 pt-2">
-					{#each navigation as item}
-						<a
-							href={item.href}
-							class="block border-l-4 border-transparent py-2 pl-3 pr-4 font-medium hover:border-primary hover:text-foreground/80"
-						>
-							{item.name}
-						</a>
-					{/each}
-				</div>
-			</div>
-		{/if}
 	</nav>
 
 	<div class="py-10">
