@@ -23,7 +23,7 @@
 								</Button>
 							</DropdownMenu.Trigger>
 							<DropdownMenu.Content>
-								<a href={`/rfid/${rfid.rfid}`}>
+								<a href={`/rfid/${rfid.id}`}>
 									<DropdownMenu.Item>
 										<Pencil1 class="mr-1.5" />
 										Edit
@@ -50,7 +50,7 @@
 						{/if}
 						<div class="flex space-x-1">
 							<Link2 />
-							<span>{rfid.rfid}</span>
+							<span>{rfid.id}</span>
 						</div>
 					</div>
 				</div>

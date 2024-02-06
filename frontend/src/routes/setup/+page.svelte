@@ -3,7 +3,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
-	import { setSpotifyCredentials } from '$lib/api/endpoints/setSpotifyCredentials';
+	import setSpotifyCredentials from '$lib/api/endpoints/setSpotifyCredentials';
     import { toastError } from '$lib/toasts';
 
 	let clientId = '';
@@ -14,7 +14,7 @@
 	async function authorize() {
         loading = true;
 
-        const response = await setSpotifyCredentials({
+        const response = await setSpotifyCredentials(fetch, {
             clientId,
             clientSecret,
             redirectUri: `${window.location.origin}/setup/callback`

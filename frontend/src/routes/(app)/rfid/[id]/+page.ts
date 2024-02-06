@@ -1,16 +1,24 @@
 import type { PageLoad } from './$types';
+import getRFIDById from '$lib/api/endpoints/getRFIDById';
+import { error } from '@sveltejs/kit';
 
 export const load = (async ({ params, fetch }) => {
     
     const { id } = params;
+    const response = await getRFIDById(fetch, id);
 
-    if (id === 'new') {
+    if (response.isHttpError && response.error.status === 404) {
         return {
-            test: "balh"
-        }
+            rfid: undefined
+        };
     }
-    
+
+    if(!response.ok) {
+        error(500, 'Failed to load RFID');
+    }
+
     return {
-        hello: "world"
+        rfid: response.data
     };
+
 }) satisfies PageLoad;

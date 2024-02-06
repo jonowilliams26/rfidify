@@ -1,32 +1,8 @@
-import { get } from '$lib/api/fetch';
+import { type FetchFn, getJson } from "../fetch";
+import type { RFIDTrack, RFIDAlbum, RFIDPlaylist, RFIDArtist } from "../types/RFID";
 
-type GetRFIDByIdResponse = Track | Album | Playlist | Artist;
+type GetRFIDByIdResponse = RFIDTrack | RFIDAlbum | RFIDPlaylist | RFIDArtist;
 
-type RFID = {
-    rfid: string;
-    name: string;
-    image?: string;
-}
-
-type Track = {
-    type: "Track";
-    artists: string[]
-} & RFID;
-
-type Album = {
-    type: "Album";
-    artists: string[];
-} & RFID;
-
-type Playlist = {
-    type: "Playlist";
-    description?: string;
-} & RFID;
-
-type Artist = {
-    type: "Artist";
-} & RFID;
-
-export async function getRFIDById(id: string) {
-    return await get<GetRFIDByIdResponse>(`/rfids/${id}`);
+export default async function getRFIDById(fetch: FetchFn, id: string) {
+    return await getJson<GetRFIDByIdResponse>(fetch, `/rfids/${id}`);
 }

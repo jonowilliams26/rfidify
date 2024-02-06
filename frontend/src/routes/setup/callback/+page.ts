@@ -1,9 +1,8 @@
-import type { PageServerLoad } from './$types';
-import { authorizeSpotify } from '$lib/api/endpoints/authorizeSpotify';
+import authorizeSpotify from '$lib/api/endpoints/authorizeSpotify';
 import { error, redirect } from '@sveltejs/kit';
+import type { PageLoad } from './$types';
 
-export const load = (async ({ url }) => {
-
+export const load = (async ({ url, fetch }) => {
     const code = url.searchParams.get('code');
     const state = url.searchParams.get('state');
     const errorState = url.searchParams.get('error');
@@ -16,10 +15,10 @@ export const load = (async ({ url }) => {
         error(401, 'Invalid code or state');
     }
 
-    const response = await authorizeSpotify({ code, state });
+    const response = await authorizeSpotify(fetch, { code, state });
     if (!response.ok) {
         error(500, 'Failed to authorize Spotify');
     }
 
-    redirect(301, '/');   
-}) satisfies PageServerLoad;
+    redirect(301, '/');  
+}) satisfies PageLoad;
