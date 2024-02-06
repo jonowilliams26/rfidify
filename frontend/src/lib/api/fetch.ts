@@ -18,7 +18,7 @@ type SuccessWithData<T> = {
     response: Response;
 }
 
-type Error = HttpError | UnexpectedError
+export type Error = HttpError | UnexpectedError
 
 type HttpError = {
     ok: false;
@@ -123,6 +123,10 @@ export async function post(fetch: FetchFn, path: string, body: any): Promise<Api
  */
 export async function getJson<TResponse>(fetch: FetchFn, path: string): Promise<ApiResponseWithData<TResponse>> {
     return fetchJson(fetch, path);
+}
+
+export async function get(fetch: FetchFn, path: string): Promise<ApiResponse> {
+    return fetchApiResponse(fetch, path);
 }
 
 function jsonOptions(method: "POST" | "PUT", body: any): RequestInit {

@@ -2,6 +2,8 @@ import authorizeSpotify from '$lib/api/endpoints/spotify/authorizeSpotify';
 import { error, redirect } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
+export const ssr = false
+
 export const load = (async ({ url, fetch }) => {
     const code = url.searchParams.get('code');
     const state = url.searchParams.get('state');
@@ -20,5 +22,5 @@ export const load = (async ({ url, fetch }) => {
         error(500, 'Failed to authorize Spotify');
     }
 
-    redirect(301, '/');  
+    redirect(301, '/');
 }) satisfies PageLoad;

@@ -19,7 +19,7 @@ public static class Endpoints
         var endpoints = app.MapGroup("/spotify")
             .WithTags("Spotify");
 
-        endpoints.MapGetCredentialsState();
+        endpoints.MapIsSpotifyCredentialsSet();
         endpoints.MapSetSpotifyCredentials();
         endpoints.MapAuthorizationCallback();
         endpoints.MapSpotifyTestEndpoints();
