@@ -1,6 +1,6 @@
 <script lang="ts">
-	import * as Card from '$lib/components/ui/card';
 	import type { RFID } from '$lib/api/types/rfid';
+	import Card from './Card.svelte';
 	import Image from './Image.svelte';
 	import DropdownMenu from './DropdownMenu.svelte';
 	import Artists from './Artists.svelte';
@@ -11,21 +11,19 @@
 	export let showOptionsMenu = true;
 </script>
 
-<Card.Root>
-	<Card.Content class="flex space-x-3 p-4 text-xs">
-		<Image item={rfid.spotifyItem} />
-		<div class="flex w-full flex-col truncate">
-			<div class="flex w-full items-start justify-between space-x-4 truncate">
-				<h2 class="truncate pb-2 text-sm font-semibold">{rfid.spotifyItem.name}</h2>
-				{#if showOptionsMenu}
-					<DropdownMenu rfid={rfid.id} />
-				{/if}
-			</div>
-			<div class="space-y-1 truncate text-xs text-muted-foreground">
-				<Artists item={rfid.spotifyItem} />
-				<Description item={rfid.spotifyItem} />
-				<TagId rfid={rfid.id} />
-			</div>
+<Card>
+	<Image item={rfid.spotifyItem} />
+	<div class="flex w-full flex-col truncate">
+		<div class="flex w-full items-start justify-between space-x-4 truncate">
+			<h2 class="truncate pb-2 text-sm font-semibold">{rfid.spotifyItem.name}</h2>
+			{#if showOptionsMenu}
+				<DropdownMenu rfid={rfid.id} />
+			{/if}
 		</div>
-	</Card.Content>
-</Card.Root>
+		<div class="space-y-1 truncate text-xs text-muted-foreground">
+			<Artists item={rfid.spotifyItem} />
+			<Description item={rfid.spotifyItem} />
+			<TagId rfid={rfid.id} />
+		</div>
+	</div>
+</Card>

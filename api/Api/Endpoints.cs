@@ -22,6 +22,7 @@ public static class Endpoints
         endpoints.MapIsSpotifyCredentialsSet();
         endpoints.MapSetSpotifyCredentials();
         endpoints.MapAuthorizationCallback();
+        endpoints.MapGetTopTracks();
         endpoints.MapSpotifyTestEndpoints();
     }
 
