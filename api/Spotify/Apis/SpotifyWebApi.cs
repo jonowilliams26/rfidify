@@ -6,6 +6,7 @@ public interface ISpotifyWebApi
     Task<SpotifyAlbum> GetAlbum(string id, CancellationToken cancellationToken);
     Task<SpotifyArtist> GetArtist(string id, CancellationToken cancellationToken);
     Task<SpotifyPlaylist> GetPlaylist(string id, CancellationToken cancellationToken);
+    Task<SpotifyPagedResponse<SpotifyArtist>> GetTopArtists(int? offset, CancellationToken cancellationToken);
     Task<SpotifyPagedResponse<SpotifyTrack>> GetTopTracks(int? offset, CancellationToken cancellationToken);
     Task<SpotifyTrack> GetTrack(string id, CancellationToken cancellationToken);
     Task Play(SpotifyItem item, CancellationToken cancellationToken);
@@ -57,6 +58,18 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
 
     public async Task<SpotifyPagedResponse<SpotifyTrack>> GetTopTracks(int? offset, CancellationToken cancellationToken)
     {
+        var uri = CreateTopItemRequestUri("me/top/tracks", offset);
+        return await httpClient.Get<SpotifyPagedResponse<SpotifyTrack>>(uri, cancellationToken);
+    }
+
+    public async Task<SpotifyPagedResponse<SpotifyArtist>> GetTopArtists(int? offset, CancellationToken cancellationToken)
+    {
+        var uri = CreateTopItemRequestUri("me/top/artists", offset);
+        return await httpClient.Get<SpotifyPagedResponse<SpotifyArtist>>(uri, cancellationToken);
+    }
+
+    private static string CreateTopItemRequestUri(string uri, int? offset)
+    {
         var query = new Dictionary<string, string?>
         {
             ["offset"] = offset?.ToString() ?? "0",
@@ -64,8 +77,7 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
             ["time_range"] = "short_term"
         };
 
-        var uri = $"me/top/tracks{QueryString.Create(query)}";
-        return await httpClient.Get<SpotifyPagedResponse<SpotifyTrack>>(uri, cancellationToken);
+        return $"{uri}{QueryString.Create(query)}";
     }
 
     private record PlayRequest

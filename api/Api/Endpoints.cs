@@ -23,6 +23,7 @@ public static class Endpoints
         endpoints.MapSetSpotifyCredentials();
         endpoints.MapAuthorizationCallback();
         endpoints.MapGetTopTracks();
+        endpoints.MapGetTopArtists();
         endpoints.MapSpotifyTestEndpoints();
     }
 
