@@ -6,24 +6,24 @@ type SpotifyId = {
     name: string;
 }
 
-type SpotifyTrack = {
+export type SpotifyTrack = {
     type: "Track";
     artists: SpotifyArtist[];
     album: SpotifyAlbum;
 } & SpotifyId;
 
-type SpotifyArtist = {
+export type SpotifyArtist = {
     type: "Artist";
     images: SpotifyImage[];
 } & SpotifyId;
 
-type SpotifyAlbum = {
+export type SpotifyAlbum = {
     type: "Album";
     images: SpotifyImage[];
     artists: SpotifyArtist[];
 } & SpotifyId;
 
-type SpotifyPlaylist = {
+export type SpotifyPlaylist = {
     type: "Playlist";
     description?: string;
     images: SpotifyImage[];

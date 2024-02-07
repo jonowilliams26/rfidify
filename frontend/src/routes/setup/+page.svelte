@@ -4,7 +4,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import setSpotifyCredentials from '$lib/api/endpoints/spotify/setSpotifyCredentials';
-    import { toastError } from '$lib/toasts';
+	import { toastError } from '$lib/toasts';
 
 	let clientId = '';
 	let clientSecret = '';
@@ -12,56 +12,54 @@
 	$: disabled = loading || !clientId || !clientSecret;
 
 	async function authorize() {
-        loading = true;
+		loading = true;
 
-        const response = await setSpotifyCredentials(fetch, {
-            clientId,
-            clientSecret,
-            redirectUri: `${window.location.origin}/setup/callback`
-        });
+		const response = await setSpotifyCredentials(fetch, {
+			clientId,
+			clientSecret,
+			redirectUri: `${window.location.origin}/setup/callback`
+		});
 
-        if (!response.ok) {
-            toastError();
-            loading = false;
-            return;
-        }
+		if (!response.ok) {
+			toastError();
+			loading = false;
+			return;
+		}
 
-        window.location.href = response.data.authorizationUri;
+		window.location.href = response.data.authorizationUri;
 	}
 </script>
 
-<div class="flex items-center h-screen">
-<Card.Root class="m-auto max-w-lg">
-	<Card.Header class="text-center">
-		<Card.Title class="text-2xl">
-			<img class="mx-auto h-16" src="spotify-logo-with-text.png" alt="RFIDify" />
-		</Card.Title>
-		<Card.Description>
-			<p>Please enter your Spotify ClientID and Secret.</p>
-			<p>
-				To get your credentials visit the <Button href="/dashboard" variant="link" class="p-0"
-					>Spotify Web API docs</Button
-				>
-			</p>
-		</Card.Description>
-	</Card.Header>
-	<Card.CardContent class="flex flex-col space-y-6">
-		<div>
-			<Label for="clientId">Client ID</Label>
-			<Input type="text" id="clientId" placeholder="Client ID" bind:value={clientId} />
-		</div>
-
-		<div>
-			<Label for="clientSecret">Client Secret</Label>
-			<Input
-				type="password"
-				id="clientSecret"
-				placeholder="Client secret"
-				bind:value={clientSecret}
-			/>
-		</div>
-
-		<Button class="w-full" on:click={authorize} {disabled}>Authorize</Button>
-	</Card.CardContent>
-</Card.Root>
+<div class="flex h-screen items-center">
+	<Card.Root class="m-auto max-w-lg">
+		<Card.Header class="text-center">
+			<Card.Title class="text-2xl">
+				<img class="mx-auto h-16" src="spotify-logo-with-text.png" alt="RFIDify" />
+			</Card.Title>
+			<Card.Description>
+				<p>Please enter your Spotify ClientID and Secret.</p>
+				<p>
+					To get your credentials visit the <Button href="/dashboard" variant="link" class="p-0"
+						>Spotify Web API docs</Button
+					>
+				</p>
+			</Card.Description>
+		</Card.Header>
+		<Card.CardContent class="flex flex-col space-y-6">
+			<div>
+				<Label for="clientId">Client ID</Label>
+				<Input type="text" id="clientId" placeholder="Client ID" bind:value={clientId} />
+			</div>
+			<div>
+				<Label for="clientSecret">Client Secret</Label>
+				<Input
+					type="password"
+					id="clientSecret"
+					placeholder="Client secret"
+					bind:value={clientSecret}
+				/>
+			</div>
+			<Button class="w-full" on:click={authorize} {disabled}>Authorize</Button>
+		</Card.CardContent>
+	</Card.Root>
 </div>

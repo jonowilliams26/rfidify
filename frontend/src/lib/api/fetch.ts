@@ -1,7 +1,7 @@
 const baseUrl = 'http://localhost:5293';
 
-type ApiResponse = Success | Error;
-type ApiResponseWithData<T> = SuccessWithData<T> | Error;
+export type ApiResponse = Success | Error;
+export type ApiResponseWithData<T> = SuccessWithData<T> | Error;
 
 type Success = {
     ok: true;

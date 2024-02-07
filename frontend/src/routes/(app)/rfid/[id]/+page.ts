@@ -1,26 +1,34 @@
 import type { PageLoad } from './$types';
-import getRFIDById from '$lib/api/endpoints/rfid/getRFIDById';
 import { error } from '@sveltejs/kit';
+import type { ApiResponseWithData } from '$lib/api/fetch';
+import getTopTracks from '$lib/api/endpoints/spotify/getTopTracks';
+import getTopArtists from '$lib/api/endpoints/spotify/getTopArtists';
+import type { SpotifyItem } from '$lib/api/types/spotify';
 
-export const load = (async ({ params, fetch }) => {
+export const load = (async ({ params, url, fetch }) => {
+
+    const type = url.searchParams.get('type') ?? 'tracks';
+    const search = url.searchParams.get('search')
     
-    const { id } = params;
-    const response = await getRFIDById(fetch, id);
-
-    if (response.isHttpError && response.error.status === 404) {
-        return {
-            id: id,
-            rfid: undefined
-        };
+    let response: ApiResponseWithData<SpotifyItem[]>;
+    switch (type) {
+        case 'tracks':
+            response = await getTopTracks(fetch);
+            break;
+        case 'artists':
+            response = await getTopArtists(fetch);
+            break;
+        default:
+            error(400, 'Invalid type');
     }
 
-    if(!response.ok) {
-        error(500, 'Failed to load RFID');
+    if (!response.ok) {
+        error(500, 'Failed to load items');
     }
 
     return {
-        id: id,
-        rfid: response.data
-    };
+        items: response.data,
+        loadingItems: false,
+    }
 
 }) satisfies PageLoad;

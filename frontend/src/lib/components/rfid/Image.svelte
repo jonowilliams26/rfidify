@@ -20,4 +20,4 @@
 	}
 </script>
 
-<img src={image()} alt={item.name} class="h-16 w-16" />
+<img src={image()} alt={item.name} class="h-16 w-16 rounded-md" />
