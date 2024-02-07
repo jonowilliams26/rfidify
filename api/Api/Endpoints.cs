@@ -24,6 +24,7 @@ public static class Endpoints
         endpoints.MapAuthorizationCallback();
         endpoints.MapGetTopTracks();
         endpoints.MapGetTopArtists();
+        endpoints.MapGetPlaylists();
         endpoints.MapSpotifyTestEndpoints();
     }
 

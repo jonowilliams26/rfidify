@@ -6,6 +6,7 @@ public interface ISpotifyWebApi
     Task<SpotifyAlbum> GetAlbum(string id, CancellationToken cancellationToken);
     Task<SpotifyArtist> GetArtist(string id, CancellationToken cancellationToken);
     Task<SpotifyPlaylist> GetPlaylist(string id, CancellationToken cancellationToken);
+    Task<SpotifyPagedResponse<SpotifyPlaylist>> GetPlaylists(int? offset, CancellationToken cancellationToken);
     Task<SpotifyPagedResponse<SpotifyArtist>> GetTopArtists(int? offset, CancellationToken cancellationToken);
     Task<SpotifyPagedResponse<SpotifyTrack>> GetTopTracks(int? offset, CancellationToken cancellationToken);
     Task<SpotifyTrack> GetTrack(string id, CancellationToken cancellationToken);
@@ -66,6 +67,12 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
     {
         var uri = CreateTopItemRequestUri("me/top/artists", offset);
         return await httpClient.Get<SpotifyPagedResponse<SpotifyArtist>>(uri, cancellationToken);
+    }
+
+    public async Task<SpotifyPagedResponse<SpotifyPlaylist>> GetPlaylists(int? offset, CancellationToken cancellationToken)
+    {
+        var uri = CreateTopItemRequestUri("me/playlists", offset);
+        return await httpClient.Get<SpotifyPagedResponse<SpotifyPlaylist>>(uri, cancellationToken);
     }
 
     private static string CreateTopItemRequestUri(string uri, int? offset)
