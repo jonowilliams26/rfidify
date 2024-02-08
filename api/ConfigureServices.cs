@@ -67,7 +67,6 @@ public static class ConfigureServices
         builder.Services.AddDbContext<AppDbContext>(options =>
         {
             var connectionString =$"Data Source=database/app.db";
-            Log.Information("Using SQLite database at {ConnectionString}", connectionString);
             options.UseSqlite(connectionString);
         });
     }
