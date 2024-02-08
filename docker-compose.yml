@@ -1,0 +1,22 @@
+version: '3'
+services:
+  api:
+    build:
+      context: api
+    volumes:
+      - db-data:/app/database
+    user: root
+    ports:
+      - "8080:8080"
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - api
+
+volumes:
+  db-data:
