@@ -1,4 +1,4 @@
-import { put, type FetchFn } from "./fetch";
+import { putJson, post, type FetchFn } from "./fetch";
 
 type SetSpotifyCredentialsRequest = {
     clientId: string;
@@ -11,5 +11,15 @@ type SetSpotifyCredentialsResponse = {
 };
 
 export async function setSpotifyCredentials(fetch: FetchFn, request: SetSpotifyCredentialsRequest) {
-    return await put<SetSpotifyCredentialsResponse>('/spotify/credentials', request, fetch);
+    return await putJson<SetSpotifyCredentialsResponse>('/spotify/credentials', request, fetch);
+}
+
+
+
+type ExchangeAuthorizationCodeRequest = {
+    code: string;
+    state: string;
+};
+export async function exchangeAuthorizationCode(fetch: FetchFn, request: ExchangeAuthorizationCodeRequest) {
+    return await post('/spotify/authorize', request, fetch);
 }

@@ -90,7 +90,12 @@ function jsonRequestInit(method: "GET" | "POST" | "PUT" | "DELETE", body: any): 
     };
 }
 
-export async function put<TResponse>(path: string | URL, body: any, fetch: FetchFn): Promise<ApiResponseWithData<TResponse>> {
+export async function putJson<TResponse>(path: string | URL, body: any, fetch: FetchFn): Promise<ApiResponseWithData<TResponse>> {
     const init = jsonRequestInit("PUT", body);
     return await executeFetchJson<TResponse>(fetch, path, init);
+}
+
+export async function post(path: string | URL, body: any, fetch: FetchFn): Promise<ApiResponse> {
+    const init = jsonRequestInit("POST", body);
+    return await executeFetch(fetch, path, init);
 }
