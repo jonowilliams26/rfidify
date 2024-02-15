@@ -105,3 +105,7 @@ export async function get(path: string | URL, fetch: FetchFn): Promise<ApiRespon
 export async function getJson<TResponse>(path: string | URL, fetch: FetchFn): Promise<ApiResponseWithData<TResponse>> {
     return await executeFetchJson<TResponse>(fetch, path);
 }
+
+export async function $delete(path: string | URL, fetch: FetchFn): Promise<ApiResponse> {
+    return await executeFetch(fetch, path, { method: "DELETE" });
+}

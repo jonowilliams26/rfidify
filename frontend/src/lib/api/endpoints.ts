@@ -1,4 +1,4 @@
-import { putJson, post, get, getJson, type FetchFn } from "./fetch";
+import { putJson, post, get, getJson, $delete, type FetchFn } from "./fetch";
 import type { RFID } from "./types";
 
 type SetSpotifyCredentialsRequest = {
@@ -46,4 +46,8 @@ export async function getRFIDs(fetch: FetchFn) {
 
 export async function getRFID(fetch: FetchFn, id: string) {
     return await getJson<RFID>(`/rfids/${id}`, fetch);
+}
+
+export async function deleteRFID(fetch: FetchFn, id: string) {
+    return await $delete(`/rfids/${id}`, fetch);
 }
