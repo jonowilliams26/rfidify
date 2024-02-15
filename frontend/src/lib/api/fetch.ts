@@ -99,3 +99,7 @@ export async function post(path: string | URL, body: any, fetch: FetchFn): Promi
     const init = jsonRequestInit("POST", body);
     return await executeFetch(fetch, path, init);
 }
+
+export async function get(path: string | URL, fetch: FetchFn): Promise<ApiResponse> {
+    return await executeFetch(fetch, path);
+}

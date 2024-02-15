@@ -1,4 +1,4 @@
-import { putJson, post, type FetchFn } from "./fetch";
+import { putJson, post, get, type FetchFn } from "./fetch";
 
 type SetSpotifyCredentialsRequest = {
     clientId: string;
@@ -22,4 +22,19 @@ type ExchangeAuthorizationCodeRequest = {
 };
 export async function exchangeAuthorizationCode(fetch: FetchFn, request: ExchangeAuthorizationCodeRequest) {
     return await post('/spotify/authorize', request, fetch);
+}
+
+
+export async function isSpotifyCredentialsSet(fetch: FetchFn) {
+    const response = await get('/spotify/credentials', fetch);
+
+    if (response.ok) {
+        return true;
+    }
+
+    if (response.isHttpError && response.error.status === 404) {
+        return false;
+    }
+
+    return response;
 }

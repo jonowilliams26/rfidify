@@ -13,7 +13,7 @@ export const load = (async ({ fetch, url }) => {
     }
 
     if (!code || !state) {
-        redirect(301, '/spotify/setup');
+        redirect(307, '/spotify/setup');
     }
 
     const response = await exchangeAuthorizationCode(fetch, { code, state });
@@ -21,5 +21,5 @@ export const load = (async ({ fetch, url }) => {
         error(500, 'Failed to exchange authorization code');
     }
 
-    redirect(301, '/');
+    redirect(307, '/');
 }) satisfies PageServerLoad;
