@@ -51,8 +51,8 @@
 	});
 </script>
 
-<div class="mx-auto flex max-w-sm flex-col items-center pt-12">
-	<Margin class="text-muted-foreground -mb-12 ml-8 h-10 w-10 animate-ping" />
+<div class="mx-auto flex max-w-lg flex-col items-center pt-12">
+	<Margin class="text-muted-foreground -mb-16 ml-10 h-10 w-10 animate-ping" />
 	<img src="/rfid-scan.svg" alt="rfid-scan" class="z-10" />
 	<p class="text-muted-foreground animate-pulse pt-4 text-sm font-semibold">
 		Please scan an RFID...
