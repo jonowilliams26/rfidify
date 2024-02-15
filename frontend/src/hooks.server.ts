@@ -3,7 +3,7 @@ import { redirect, type Handle, error } from '@sveltejs/kit';
 export const handle: Handle = async ({ event, resolve }) => {
 
     // No need to run check to see if credentials have been set because they are being setup
-    if (event.url.pathname.startsWith('/spotify/setup')) {
+    if (event.url.pathname.startsWith("/api") || event.url.pathname.startsWith('/spotify/setup')) {
         console.log("Skipping hooks.server.ts Handle.")
         return await resolve(event);
     }

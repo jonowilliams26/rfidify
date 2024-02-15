@@ -1,5 +1,3 @@
-import { PUBLIC_BASE_API_URL } from "$env/static/public";
-
 type ApiResponse = Success | ApiError;
 type ApiResponseWithData<T> = SuccessWithData<T> | ApiError;
 
@@ -33,7 +31,7 @@ export type FetchFn = typeof fetch;
 
 async function executeFetch(fetch: FetchFn, path: string | URL, init?: RequestInit): Promise<ApiResponse> {
     try {
-        const url = new URL(path, PUBLIC_BASE_API_URL);
+        const url = `/api${path}`
         const response = await fetch(url, init);
         if (response.ok) {
             return {

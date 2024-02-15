@@ -37,6 +37,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@microsoft/signalr": "^8.0.0",
 		"bits-ui": "^0.17.0",
 		"clsx": "^2.1.0",
 		"mode-watcher": "^0.2.0",
