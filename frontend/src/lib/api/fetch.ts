@@ -103,3 +103,7 @@ export async function post(path: string | URL, body: any, fetch: FetchFn): Promi
 export async function get(path: string | URL, fetch: FetchFn): Promise<ApiResponse> {
     return await executeFetch(fetch, path);
 }
+
+export async function getJson<TResponse>(path: string | URL, fetch: FetchFn): Promise<ApiResponseWithData<TResponse>> {
+    return await executeFetchJson<TResponse>(fetch, path);
+}

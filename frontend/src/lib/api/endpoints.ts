@@ -1,4 +1,4 @@
-import { putJson, post, get, type FetchFn } from "./fetch";
+import { putJson, post, get, getJson, type FetchFn } from "./fetch";
 
 type SetSpotifyCredentialsRequest = {
     clientId: string;
@@ -37,4 +37,49 @@ export async function isSpotifyCredentialsSet(fetch: FetchFn) {
     }
 
     return response;
+}
+
+
+type RFID = {
+    id: string;
+    spotifyItem: Track | Artist | Album | Playlist;
+}
+
+type Track = {
+    type: "Track";
+    id: string;
+    name: string;
+    uri: string;
+}
+
+type Artist = {
+    type: "Artist";
+    id: string;
+    name: string;
+    uri: string;
+}
+
+type Album = {
+    type: "Album";
+    id: string;
+    name: string;
+    uri: string;
+}
+
+type Playlist = {
+    type: "Playlist";
+    id: string;
+    name: string;
+    uri: string;
+    description: string;
+}
+
+type Image = {
+    url: string;
+    width?: number;
+    height?: number;
+}
+
+export async function getRFIDs(fetch: FetchFn) {
+    return await getJson<RFID[]>('/rfids', fetch);
 }

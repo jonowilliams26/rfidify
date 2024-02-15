@@ -1,19 +1,15 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-    import type { PageData } from './$types';
-    import { PUBLIC_BASE_API_URL } from '$env/static/public';
-    
-    export let data: PageData;
+	import type { PageData } from './$types';
+    import { Button } from "$lib/components/ui/button";
 
-    let rfids = [];
-
-    onMount(async () => {
-        console.log('on Mount', PUBLIC_BASE_API_URL);
-        const response = await fetch(`${PUBLIC_BASE_API_URL}/rfids`);
-        rfids = await response.json();
-    });
+	export let data: PageData;
 </script>
 
-<h1>Hello from test</h1>
-<p>{PUBLIC_BASE_API_URL}</p>
-<p>{rfids}</p>
+{#if data.rfids.length === 0}
+	<div class="flex flex-col items-center justify-center max-w-sm mx-auto space-y-4">
+		<img src="home-empty-state.svg" alt="empty-state"/>
+        <Button class="w-full" href="/rfid/setup">Setup your first RFID</Button>
+	</div>
+{:else}
+	<p>RFIDs found</p>
+{/if}
