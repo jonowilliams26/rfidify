@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { SpotifyItem } from '$lib/api/types';
-	import { Link2, Person } from 'radix-icons-svelte';
+	import { Link1, Person } from 'radix-icons-svelte';
 	import { cn } from '$lib/utils';
 	import { tv } from 'tailwind-variants';
 
@@ -108,7 +108,7 @@
 			{/if}
 			{#if rfid}
 				<div class="flex items-center space-x-1 truncate">
-					<Link2 class={iconClass()} />
+					<Link1 class={iconClass()} />
 					<span class={subTextClass()}>{rfid}</span>
 				</div>
 			{/if}

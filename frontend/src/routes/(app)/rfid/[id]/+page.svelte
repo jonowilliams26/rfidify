@@ -3,12 +3,15 @@
 	import { page } from '$app/stores';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { Input } from '$lib/components/ui/input';
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { Skeleton } from '$lib/components/ui/skeleton';
-	import { SpotifyItemTypes, type SpotifyItemType } from '$lib/api/types';
-	import { SpotifyItem } from '$lib/components/spotify';
+	import { SpotifyItemTypes, type SpotifyItemType, type SpotifyItem } from '$lib/api/types';
+	import { SpotifyItem as SpotifyItemComponent } from '$lib/components/spotify';
 	import * as Alert from '$lib/components/ui/alert';
-	import { ExclamationTriangle } from 'radix-icons-svelte';
+	import { ExclamationTriangle, Link1 } from 'radix-icons-svelte';
+	import { Button } from '$lib/components/ui/button';
+	import { createOrUpdateRFID } from '$lib/api/endpoints';
+	import { toast } from 'svelte-sonner';
 
 	const searchParams = {
 		search: 'search',
@@ -37,6 +40,20 @@
 		const query = new URLSearchParams($page.url.search);
 		query.set('type', type);
 		goto(`?${query}`);
+	}
+
+	async function linkSpotifyItemToRFID(spotifyItem: SpotifyItem) {
+		const response = await createOrUpdateRFID(fetch, {
+			rfid: data.rfid.id,
+			spotifyUri: spotifyItem.uri
+		});
+
+		if (!response.ok){
+			toast.error('Sorry, something went wrong. Please try again.');
+			return;
+		}
+
+		invalidate(`/api/rfids/${data.rfid.id}`);
 	}
 </script>
 
@@ -95,9 +112,12 @@
 {:then spotifyItems}
 	{#if spotifyItems}
 		<ul role="list" class="divide-y pt-6">
-			{#each spotifyItems.items as spotifyItem}
-				<div class="py-2">
-					<SpotifyItem {spotifyItem} size="sm" />
+			{#each spotifyItems.items.filter(x => x.uri !== data.rfid.spotifyItem?.uri) as spotifyItem}
+				<div class="flex items-center justify-between py-2">
+					<SpotifyItemComponent {spotifyItem} size="sm" />
+					<Button variant="ghost" size="icon" on:click={() => linkSpotifyItemToRFID(spotifyItem)} >
+						<Link1 />
+					</Button>
 				</div>
 			{/each}
 		</ul>

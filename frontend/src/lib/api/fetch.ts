@@ -88,6 +88,11 @@ function jsonRequestInit(method: "GET" | "POST" | "PUT" | "DELETE", body: any): 
     };
 }
 
+export async function put(path: string | URL, body: any, fetch: FetchFn): Promise<ApiResponse> {
+    const init = jsonRequestInit("PUT", body);
+    return await executeFetch(fetch, path, init);
+}
+
 export async function putJson<TResponse>(path: string | URL, body: any, fetch: FetchFn): Promise<ApiResponseWithData<TResponse>> {
     const init = jsonRequestInit("PUT", body);
     return await executeFetchJson<TResponse>(fetch, path, init);

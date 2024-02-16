@@ -1,4 +1,4 @@
-import { putJson, post, get, getJson, $delete, type FetchFn } from "./fetch";
+import { putJson, post, get, getJson, $delete, type FetchFn, put } from "./fetch";
 import type { PagedResponse, RFID, Track } from "./types";
 
 type SetSpotifyCredentialsRequest = {
@@ -54,4 +54,13 @@ export async function deleteRFID(fetch: FetchFn, id: string) {
 
 export async function getTopTracks(fetch: FetchFn) {
     return await getJson<PagedResponse<Track>>('/spotify/tracks', fetch);
+}
+
+
+type CreateOrUpdateRFIDRequest = {
+    rfid: string;
+    spotifyUri: string;
+}
+export async function createOrUpdateRFID(fetch: FetchFn, request: CreateOrUpdateRFIDRequest) {
+    return await put('/rfids', request, fetch);
 }

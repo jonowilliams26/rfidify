@@ -3,6 +3,7 @@
 	import { RFID, EmptyStateRFID } from '$lib/components/rfid';
 
 	export let data: LayoutData;
+	$: ({ rfid } = data);
 </script>
 
 {#if !data.rfid.spotifyItem}
