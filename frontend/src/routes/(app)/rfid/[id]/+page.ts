@@ -1,26 +1,31 @@
-import { getRFID } from '$lib/api/endpoints';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
+import type { FetchFn } from '$lib/api/fetch';
+import { isSpotifyItemType } from '$lib/api/types';
+import type { PagedResponse, SpotifyItem, SpotifyItemType } from '$lib/api/types';
+import { getTopTracks } from '$lib/api/endpoints';
 
-export const load = (async ({ fetch, params }) => {
+export const load = (async ({ fetch, url }) => {
 
-    const response = await getRFID(fetch, params.id);
+    const type = url.searchParams.get('type') ?? 'Track';
+    const search = url.searchParams.get('search');
 
-    if (!response.ok && response.isHttpError && response.error.status === 404) {
-        return {
-            rfid: {
-                id: params.id,
-                spotifyItem: undefined
-            }
-        };
-    }
-
-    if (!response.ok) {
-        error(500, "Failed to load RFID");
+    if (!isSpotifyItemType(type)) {
+        error(400, "Invalid type");
     }
 
     return {
-        rfid: response.data
+        // Need to add a no-op catch since we are streaming the results
+        // See: https://kit.svelte.dev/docs/load#streaming-with-promises
+        spotifyItems: getSpotifyItems(fetch, type, search)
     };
 
 }) satisfies PageLoad;
+
+async function getSpotifyItems(fetch: FetchFn, type: SpotifyItemType, search: string | null): Promise<PagedResponse<SpotifyItem>> {
+    const response = await getTopTracks(fetch);
+    if (!response.ok) {
+        throw new Error("Failed to load Spotify items");
+    }
+    return response.data
+}

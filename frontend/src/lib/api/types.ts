@@ -1,10 +1,25 @@
-export type RFID = {
-    id: string;
-    spotifyItem: Track | Artist | Album | Playlist;
+export const SpotifyItemTypes = {
+    track: 'Track',
+    album: 'Album',
+    artist: 'Artist',
+    playlist: 'Playlist'
+} as const;
+
+const SpotifyItemTypeList = [SpotifyItemTypes.track, SpotifyItemTypes.album, SpotifyItemTypes.artist, SpotifyItemTypes.playlist] as const;
+export type SpotifyItemType = typeof SpotifyItemTypeList[number];
+export function isSpotifyItemType(type: string): type is SpotifyItemType {
+    return SpotifyItemTypeList.includes(type as SpotifyItemType);
 }
 
-type Track = {
-    type: "Track";
+export type RFID = {
+    id: string;
+    spotifyItem: SpotifyItem;
+}
+
+export type SpotifyItem = Track | Artist | Album | Playlist;
+
+export type Track = {
+    type: typeof SpotifyItemTypes.track;
     id: string;
     name: string;
     uri: string;
@@ -12,16 +27,16 @@ type Track = {
     album: Album;
 }
 
-type Artist = {
-    type: "Artist";
+export type Artist = {
+    type: typeof SpotifyItemTypes.artist;
     id: string;
     name: string;
     uri: string;
     images: Image[];
 }
 
-type Album = {
-    type: "Album";
+export type Album = {
+    type: typeof SpotifyItemTypes.album;
     id: string;
     name: string;
     uri: string;
@@ -29,8 +44,8 @@ type Album = {
     artists: Artist[];
 }
 
-type Playlist = {
-    type: "Playlist";
+export type Playlist = {
+    type: typeof SpotifyItemTypes.playlist;
     id: string;
     name: string;
     uri: string;
@@ -42,4 +57,13 @@ type Image = {
     url: string;
     width?: number;
     height?: number;
+}
+
+export type PagedResponse<T> = {
+    items: T[];
+    next?: string;
+    previous?: string;
+    limit: number;
+    offset: number;
+    total: number;
 }
