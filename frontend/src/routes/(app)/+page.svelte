@@ -33,7 +33,7 @@
 				<RFID {rfid} />
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger asChild let:builder>
-						<Button builders={[builder]} variant="ghost" size="icon">
+						<Button builders={[builder]} variant="ghost" size="icon" class="flex-shrink-0">
 							<DotsHorizontal />
 						</Button>
 					</DropdownMenu.Trigger>

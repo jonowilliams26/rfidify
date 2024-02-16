@@ -45,7 +45,13 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
 
     public async Task<SpotifyPlaylist> GetPlaylist(string id, CancellationToken cancellationToken)
     {
-        return await httpClient.Get<SpotifyPlaylist>($"playlists/{id}", cancellationToken);
+        var query = new Dictionary<string, string?>
+        {
+            ["fields"] = "id,uri,name,description,images",
+        };
+
+        var uri = $"playlists/{id}{QueryString.Create(query)}";
+        return await httpClient.Get<SpotifyPlaylist>(uri, cancellationToken);
     }
 
     public async Task<SpotifyAlbum> GetAlbum(string id, CancellationToken cancellationToken)
