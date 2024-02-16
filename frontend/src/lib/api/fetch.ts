@@ -1,5 +1,5 @@
 type ApiResponse = Success | ApiError;
-type ApiResponseWithData<T> = SuccessWithData<T> | ApiError;
+export type ApiResponseWithData<T> = SuccessWithData<T> | ApiError;
 
 type Success = {
     ok: true;
