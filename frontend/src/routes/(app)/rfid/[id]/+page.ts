@@ -17,15 +17,15 @@ export const load = (async ({ fetch, url }) => {
     return {
         // Need to add a no-op catch since we are streaming the results
         // See: https://kit.svelte.dev/docs/load#streaming-with-promises
-        spotifyItems: getSpotifyItems(fetch, type, search)
+        spotifyItems: getSpotifyItems(fetch, type, search).catch(() => {})
     };
 
 }) satisfies PageLoad;
 
-async function getSpotifyItems(fetch: FetchFn, type: SpotifyItemType, search: string | null): Promise<PagedResponse<SpotifyItem>> {
+async function getSpotifyItems(fetch: FetchFn, type: SpotifyItemType, search: string | null) : Promise<PagedResponse<SpotifyItem>> {
     const response = await getTopTracks(fetch);
     if (!response.ok) {
-        throw new Error("Failed to load Spotify items");
+        return Promise.reject(response);
     }
-    return response.data
+    return response.data;
 }

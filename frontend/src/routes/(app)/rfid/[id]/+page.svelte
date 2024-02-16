@@ -7,6 +7,8 @@
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { SpotifyItemTypes, type SpotifyItemType } from '$lib/api/types';
 	import { SpotifyItem } from '$lib/components/spotify';
+	import * as Alert from '$lib/components/ui/alert';
+	import { ExclamationTriangle } from 'radix-icons-svelte';
 
 	const searchParams = {
 		search: 'search',
@@ -38,7 +40,7 @@
 	}
 </script>
 
-<div class="flex flex-col items-center space-x-2 space-y-2 pt-12 md:flex-row md:space-y-0">
+<div class="flex flex-col items-center space-x-2 space-y-2 pt-12 md:flex-row md:space-y-0 pb-6">
 	<Tabs.Root value={type} class="w-full md:w-[500px]">
 		<Tabs.List class="grid grid-cols-4">
 			<Tabs.Trigger
@@ -76,7 +78,7 @@
 </div>
 
 {#await data.spotifyItems}
-	<ul role="list" class="divide-y pt-6">
+	<ul role="list" class="divide-y">
 		{#each Array(5) as _}
 			<div class="flex items-center justify-between py-4">
 				<div class="flex items-center space-x-2">
@@ -91,13 +93,21 @@
 		{/each}
 	</ul>
 {:then spotifyItems}
-	<ul role="list" class="divide-y pt-6">
-		{#each spotifyItems.items as spotifyItem}
-		<div class="py-2">
-			<SpotifyItem spotifyItem={spotifyItem} size="sm"/>
-		</div>
-		{/each}
-	</ul>
-{:catch error}
-	<p>error loading spotify items: {error.message}</p>
+	{#if spotifyItems}
+		<ul role="list" class="divide-y pt-6">
+			{#each spotifyItems.items as spotifyItem}
+				<div class="py-2">
+					<SpotifyItem {spotifyItem} size="sm" />
+				</div>
+			{/each}
+		</ul>
+	{:else}
+		<Alert.Root variant="destructive">
+			<ExclamationTriangle class="h-4 w-4" />
+			<Alert.Title>Sorry, something went wrong</Alert.Title>
+			<Alert.Description>
+				An unexpected error occurred trying to load data from Spotify. Please try again.
+			</Alert.Description>
+		</Alert.Root>
+	{/if}
 {/await}
