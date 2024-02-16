@@ -22,6 +22,7 @@ public class SpotifyHttpClient(HttpClient httpClient)
     /// <exception cref="SerializationException"></exception>
     public async Task<TResponse> Get<TResponse>(string uri, CancellationToken cancellationToken)
     {
+        var response = await httpClient.GetAsync(uri, cancellationToken);
         return await httpClient.GetFromJsonAsync<TResponse>(uri, jsonSerializerOptions, cancellationToken) ?? throw new SerializationException($"Failed to deserialize response from GET {uri}");
     }
 

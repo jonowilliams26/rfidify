@@ -48,7 +48,7 @@
 			spotifyUri: spotifyItem.uri
 		});
 
-		if (!response.ok){
+		if (!response.ok) {
 			toast.error('Sorry, something went wrong. Please try again.');
 			return;
 		}
@@ -57,7 +57,7 @@
 	}
 </script>
 
-<div class="flex flex-col items-center space-x-2 space-y-2 pt-12 md:flex-row md:space-y-0 pb-6">
+<div class="flex flex-col items-center space-x-2 space-y-2 pb-6 pt-12 md:flex-row md:space-y-0">
 	<Tabs.Root value={type} class="w-full md:w-[500px]">
 		<Tabs.List class="grid grid-cols-4">
 			<Tabs.Trigger
@@ -112,10 +112,10 @@
 {:then spotifyItems}
 	{#if spotifyItems}
 		<ul role="list" class="divide-y pt-6">
-			{#each spotifyItems.items.filter(x => x.uri !== data.rfid.spotifyItem?.uri) as spotifyItem}
+			{#each spotifyItems.items.filter((x) => x.uri !== data.rfid.spotifyItem?.uri) as spotifyItem}
 				<div class="flex items-center justify-between py-2">
 					<SpotifyItemComponent {spotifyItem} size="sm" />
-					<Button variant="ghost" size="icon" on:click={() => linkSpotifyItemToRFID(spotifyItem)} >
+					<Button variant="ghost" size="icon" on:click={() => linkSpotifyItemToRFID(spotifyItem)}>
 						<Link1 />
 					</Button>
 				</div>
