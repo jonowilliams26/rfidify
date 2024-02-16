@@ -1,4 +1,6 @@
-﻿namespace RFIDify.Spotify.Apis;
+﻿using HtmlAgilityPack;
+
+namespace RFIDify.Spotify.Apis;
 
 public interface ISpotifyWebApi
 {
@@ -79,7 +81,46 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
     public async Task<SpotifyPagedResponse<SpotifyPlaylist>> GetPlaylists(int? offset, CancellationToken cancellationToken)
     {
         var uri = CreateTopItemRequestUri("me/playlists", offset);
-        return await httpClient.Get<SpotifyPagedResponse<SpotifyPlaylist>>(uri, cancellationToken);
+        var response = await httpClient.Get<SpotifyPagedResponse<SpotifyPlaylist>>(uri, cancellationToken);
+        return new SpotifyPagedResponse<SpotifyPlaylist>
+        {
+            Items = response.Items.Select(x => new SpotifyPlaylist
+            {
+                Id = x.Id,
+                Uri = x.Uri,
+                Name = x.Name,
+                Description = StripHtml(x.Description),
+                Images = x.Images.Select(x => new SpotifyImage
+                {
+                    Url = x.Url,
+                    Width = x.Width,
+                    Height = x.Height
+                }).ToList()
+            }).ToList(),
+            Total = response.Total,
+            Limit = response.Limit,
+            Next = response.Next,
+            Offset = response.Offset,
+            Previous = response.Previous
+        };
+    }
+
+    private static string? StripHtml(string? value)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+
+        var htmlDoc = new HtmlDocument();
+        htmlDoc.LoadHtml(value);
+
+        if (htmlDoc == null)
+        {
+            return value;
+        }
+
+        return htmlDoc.DocumentNode.InnerText;
     }
 
     public async Task<SpotifyPagedResponse<SpotifyAlbum>> GetSavedAlbums(int? offset, CancellationToken cancellationToken)
