@@ -1,4 +1,6 @@
-﻿namespace RFIDify.Spotify.Endpoints;
+﻿using RFIDify.Spotify.Apis.AccountsApi;
+
+namespace RFIDify.Spotify.Endpoints;
 
 public record SetSpotifyCredentialsRequest(string ClientId, string ClientSecret, string RedirectUri);
 public record SetSpotifyCredentialsResponse(string AuthorizationUri);

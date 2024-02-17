@@ -1,4 +1,6 @@
-﻿namespace RFIDify.Spotify.Endpoints;
+﻿using RFIDify.Spotify.Apis.WebApi;
+
+namespace RFIDify.Spotify.Endpoints;
 
 public record GetSavedAlbumsRequest(int? Offset);
 
@@ -10,6 +12,6 @@ public static class GetSavedAlbums
 
     private static async Task<SpotifyPagedResponse<SpotifyAlbum>> Handle([AsParameters] GetSavedAlbumsRequest request, ISpotifyWebApi api, CancellationToken cancellationToken)
     {
-        return await api.GetSavedAlbums(request.Offset, cancellationToken);
+        return await api.GetAlbums(request.Offset, cancellationToken);
     }
 }

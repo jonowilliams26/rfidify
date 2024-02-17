@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
+using RFIDify.Spotify.Apis.WebApi.RequestResponse;
 
-namespace RFIDify.Spotify.Apis;
+namespace RFIDify.Spotify.Apis.WebApi;
 
 public interface ISpotifyWebApi
 {
@@ -11,7 +12,7 @@ public interface ISpotifyWebApi
     Task<SpotifyPagedResponse<SpotifyPlaylist>> GetPlaylists(int? offset, CancellationToken cancellationToken);
     Task<SpotifyPagedResponse<SpotifyArtist>> GetTopArtists(int? offset, CancellationToken cancellationToken);
     Task<SpotifyPagedResponse<SpotifyTrack>> GetTopTracks(int? offset, CancellationToken cancellationToken);
-    Task<SpotifyPagedResponse<SpotifyAlbum>> GetSavedAlbums(int? offset, CancellationToken cancellationToken);
+    Task<SpotifyPagedResponse<SpotifyAlbum>> GetAlbums(int? offset, CancellationToken cancellationToken);
     Task<SpotifyTrack> GetTrack(string id, CancellationToken cancellationToken);
     Task<SpotifyPagedResponse<SpotifyItem>> Search(string search, SpotifyItemType type, CancellationToken cancellationToken);
     Task Play(SpotifyItem item, CancellationToken cancellationToken);
@@ -19,17 +20,10 @@ public interface ISpotifyWebApi
 
 public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
 {
-    private readonly SpotifyHttpClient httpClient = new(httpClient);
-
     public async Task Play(SpotifyItem item, CancellationToken cancellationToken)
     {
-        PlayRequest request = item switch
-        {
-            SpotifyTrack => new() { Uris = [item.Uri] },
-            _ => new() { ContextUri = item.Uri }
-        };
-
-        await httpClient.Put("me/player/play", request, cancellationToken);
+        var request = new PlayRequest(item);
+        await httpClient.PutAsJsonAsync(request, cancellationToken);
     }
 
     public async Task<SpotifyItem> Get(SpotifyUri uri, CancellationToken cancellationToken) => uri.Type switch
@@ -43,46 +37,44 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
 
     public async Task<SpotifyTrack> GetTrack(string id, CancellationToken cancellationToken)
     {
-        return await httpClient.Get<SpotifyTrack>($"tracks/{id}", cancellationToken);
+        var request = new GetTrackRequest(id);
+        return await httpClient.GetFromJsonAsync<SpotifyTrack>(request, cancellationToken);
     }
 
     public async Task<SpotifyPlaylist> GetPlaylist(string id, CancellationToken cancellationToken)
     {
-        var query = new Dictionary<string, string?>
-        {
-            ["fields"] = "id,uri,name,description,images",
-        };
-
-        var uri = $"playlists/{id}{QueryString.Create(query)}";
-        return await httpClient.Get<SpotifyPlaylist>(uri, cancellationToken);
+        var request = new GetPlaylistRequest(id);
+        return await httpClient.GetFromJsonAsync<SpotifyPlaylist>(request, cancellationToken);
     }
 
     public async Task<SpotifyAlbum> GetAlbum(string id, CancellationToken cancellationToken)
     {
-        return await httpClient.Get<SpotifyAlbum>($"albums/{id}", cancellationToken);
+        var request = new GetAlbumRequest(id);
+        return await httpClient.GetFromJsonAsync<SpotifyAlbum>(request, cancellationToken);
     }
 
     public async Task<SpotifyArtist> GetArtist(string id, CancellationToken cancellationToken)
     {
-        return await httpClient.Get<SpotifyArtist>($"artists/{id}", cancellationToken);
+        var request = new GetArtistRequest(id);
+        return await httpClient.GetFromJsonAsync<SpotifyArtist>(request, cancellationToken);
     }
 
     public async Task<SpotifyPagedResponse<SpotifyTrack>> GetTopTracks(int? offset, CancellationToken cancellationToken)
     {
-        var uri = CreateTopItemRequestUri("me/top/tracks", offset);
-        return await httpClient.Get<SpotifyPagedResponse<SpotifyTrack>>(uri, cancellationToken);
+        var request = new GetTopTracksRequest(offset);
+        return await httpClient.GetFromJsonAsync<SpotifyPagedResponse<SpotifyTrack>>(request, cancellationToken);
     }
 
     public async Task<SpotifyPagedResponse<SpotifyArtist>> GetTopArtists(int? offset, CancellationToken cancellationToken)
     {
-        var uri = CreateTopItemRequestUri("me/top/artists", offset);
-        return await httpClient.Get<SpotifyPagedResponse<SpotifyArtist>>(uri, cancellationToken);
+        var request = new GetTopArtistsRequest(offset);
+        return await httpClient.GetFromJsonAsync<SpotifyPagedResponse<SpotifyArtist>>(request, cancellationToken);
     }
 
     public async Task<SpotifyPagedResponse<SpotifyPlaylist>> GetPlaylists(int? offset, CancellationToken cancellationToken)
     {
-        var uri = CreateTopItemRequestUri("me/playlists", offset);
-        var response = await httpClient.Get<SpotifyPagedResponse<SpotifyPlaylist>>(uri, cancellationToken);
+        var request = new GetPlaylistsRequests(offset);
+        var response = await httpClient.GetFromJsonAsync<SpotifyPagedResponse<SpotifyPlaylist>>(request, cancellationToken);
         return new SpotifyPagedResponse<SpotifyPlaylist>
         {
             Items = response.Items.Select(RemoveHTMLFromPlaylist).ToList(),
@@ -113,10 +105,10 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
         return playlist;
     }
 
-    public async Task<SpotifyPagedResponse<SpotifyAlbum>> GetSavedAlbums(int? offset, CancellationToken cancellationToken)
+    public async Task<SpotifyPagedResponse<SpotifyAlbum>> GetAlbums(int? offset, CancellationToken cancellationToken)
     {
-        var uri = CreateTopItemRequestUri("me/albums", offset);
-        var response = await httpClient.Get<SpotifyPagedResponse<GetSavedAlbumsResponseItem>>(uri, cancellationToken);
+        var request = new GetAlbumsRequest(offset);
+        var response = await httpClient.GetFromJsonAsync<SpotifyPagedResponse<GetSavedAlbumsResponseItem>>(request, cancellationToken);
         return new SpotifyPagedResponse<SpotifyAlbum>
         {
             Items = response.Items.Select(x => x.Album).ToList(),
@@ -128,30 +120,10 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
         };
     }
 
-    private static string CreateTopItemRequestUri(string uri, int? offset)
-    {
-        var query = new Dictionary<string, string?>
-        {
-            ["offset"] = offset?.ToString() ?? "0",
-            ["limit"] = "20",
-            ["time_range"] = "short_term"
-        };
-
-        return $"{uri}{QueryString.Create(query)}";
-    }
-
     public async Task<SpotifyPagedResponse<SpotifyItem>> Search(string search, SpotifyItemType type, CancellationToken cancellationToken)
     {
-        var query = new Dictionary<string, string?>
-        {
-            ["q"] = search,
-            ["type"] = type.ToString(),
-            ["limit"] = "20"
-        };
-
-        var uri = $"search{QueryString.Create(query)}";
-        var response = await httpClient.Get<SearchResponse>(uri, cancellationToken);
-
+        var request = new SearchRequest(search, type);
+        var response = await httpClient.GetFromJsonAsync<SearchResponse>(request, cancellationToken);
         return type switch
         {
             SpotifyItemType.track => CreatePagedResponseFromSearchResponse(response.Tracks!),
@@ -181,22 +153,8 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
         };
     }
 
-    private record PlayRequest
-    {
-        public string? ContextUri { get; init; }
-        public string[]? Uris { get; init; }
-    }
-
     private record GetSavedAlbumsResponseItem
     {
         public required SpotifyAlbum Album { get; init; }
-    }
-
-    private record SearchResponse
-    {
-        public SpotifyPagedResponse<SpotifyTrack>? Tracks { get; init; }
-        public SpotifyPagedResponse<SpotifyAlbum>? Albums { get; init; }
-        public SpotifyPagedResponse<SpotifyArtist>? Artists { get; init; }
-        public SpotifyPagedResponse<SpotifyPlaylist>? Playlists { get; init; }
     }
 }

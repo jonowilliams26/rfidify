@@ -1,4 +1,6 @@
-﻿namespace RFIDify.RFID.Endpoints;
+﻿using RFIDify.Spotify.Apis.WebApi;
+
+namespace RFIDify.RFID.Endpoints;
 
 public record CreateOrUpdateRFIDTagRequest(string RFID, string SpotifyUri);
 public class CreateOrUpdateRFIDTagRequestValidator : AbstractValidator<CreateOrUpdateRFIDTagRequest>

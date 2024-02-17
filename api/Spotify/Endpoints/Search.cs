@@ -1,4 +1,6 @@
-﻿namespace RFIDify.Spotify.Endpoints;
+﻿using RFIDify.Spotify.Apis.WebApi;
+
+namespace RFIDify.Spotify.Endpoints;
 
 public record SearchRequest(string Search, SpotifyItemType Type);
 public class SearchRequestValidator : AbstractValidator<SearchRequest>

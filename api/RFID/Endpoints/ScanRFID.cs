@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using RFIDify.RFID.Hubs;
+using RFIDify.Spotify.Apis.WebApi;
 
 namespace RFIDify.RFID.Endpoints;
 

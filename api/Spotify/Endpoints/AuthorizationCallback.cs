@@ -1,4 +1,6 @@
-﻿namespace RFIDify.Spotify.Endpoints;
+﻿using RFIDify.Spotify.Apis.AccountsApi;
+
+namespace RFIDify.Spotify.Endpoints;
 
 public record AuthorizationCallbackRequest(string Code, string State);
 public class AuthorizationCallbackRequestValidator : AbstractValidator<AuthorizationCallbackRequest>
