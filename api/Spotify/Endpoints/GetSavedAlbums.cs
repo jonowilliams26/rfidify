@@ -1,4 +1,6 @@
 ﻿using RFIDify.Spotify.Apis.WebApi;
+using RFIDify.Spotify.Apis.WebApi.RequestResponse;
+using RFIDify.Spotify.Apis.WebApi.RequestResponse.Items;
 
 namespace RFIDify.Spotify.Endpoints;
 
@@ -10,7 +12,7 @@ public static class GetSavedAlbums
         .MapGet("/albums", Handle)
         .WithSummary("Get the current user's saved albums.");
 
-    private static async Task<SpotifyPagedResponse<SpotifyAlbum>> Handle([AsParameters] GetSavedAlbumsRequest request, ISpotifyWebApi api, CancellationToken cancellationToken)
+    private static async Task<PagedResponse<Album>> Handle([AsParameters] GetSavedAlbumsRequest request, ISpotifyWebApi api, CancellationToken cancellationToken)
     {
         return await api.GetAlbums(request.Offset, cancellationToken);
     }

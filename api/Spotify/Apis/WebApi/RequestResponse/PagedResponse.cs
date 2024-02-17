@@ -1,6 +1,6 @@
-﻿namespace RFIDify.Spotify.Data;
+﻿namespace RFIDify.Spotify.Apis.WebApi.RequestResponse;
 
-public record SpotifyPagedResponse<T>
+public record PagedResponse<T>
 {
     public Uri? Next { get; init; }
     public Uri? Previous { get; init; }

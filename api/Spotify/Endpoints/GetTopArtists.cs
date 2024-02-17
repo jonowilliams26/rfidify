@@ -1,4 +1,6 @@
 ﻿using RFIDify.Spotify.Apis.WebApi;
+using RFIDify.Spotify.Apis.WebApi.RequestResponse;
+using RFIDify.Spotify.Apis.WebApi.RequestResponse.Items;
 
 namespace RFIDify.Spotify.Endpoints;
 
@@ -10,7 +12,7 @@ public static class GetTopArtists
         .MapGet("/artists", Handle)
         .WithSummary("Get the current user's top artists.");
 
-    private static async Task<SpotifyPagedResponse<SpotifyArtist>> Handle([AsParameters] GetTopArtistsRequest request, ISpotifyWebApi api, CancellationToken cancellationToken)
+    private static async Task<PagedResponse<Artist>> Handle([AsParameters] GetTopArtistsRequest request, ISpotifyWebApi api, CancellationToken cancellationToken)
     {
         return await api.GetTopArtists(request.Offset, cancellationToken);
     }

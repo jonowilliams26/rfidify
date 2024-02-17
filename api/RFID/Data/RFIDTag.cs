@@ -1,4 +1,6 @@
-﻿namespace RFIDify.RFID.Data;
+﻿using RFIDify.Spotify.Apis.WebApi.RequestResponse.Items;
+
+namespace RFIDify.RFID.Data;
 
 public class RFIDTag
 {

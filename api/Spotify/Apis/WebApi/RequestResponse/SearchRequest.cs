@@ -1,4 +1,6 @@
-﻿namespace RFIDify.Spotify.Apis.WebApi.RequestResponse;
+﻿using RFIDify.Spotify.Apis.WebApi.RequestResponse.Items;
+
+namespace RFIDify.Spotify.Apis.WebApi.RequestResponse;
 
 public record SearchRequest(string Search, SpotifyItemType Type) : ISpotifyRequest
 {
@@ -16,8 +18,8 @@ public record SearchRequest(string Search, SpotifyItemType Type) : ISpotifyReque
 
 public record SearchResponse
 {
-    public SpotifyPagedResponse<SpotifyTrack>? Tracks { get; init; }
-    public SpotifyPagedResponse<SpotifyAlbum>? Albums { get; init; }
-    public SpotifyPagedResponse<SpotifyArtist>? Artists { get; init; }
-    public SpotifyPagedResponse<SpotifyPlaylist>? Playlists { get; init; }
+    public PagedResponse<Track>? Tracks { get; init; }
+    public PagedResponse<Album>? Albums { get; init; }
+    public PagedResponse<Artist>? Artists { get; init; }
+    public PagedResponse<Playlist>? Playlists { get; init; }
 }

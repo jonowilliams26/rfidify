@@ -1,4 +1,6 @@
-﻿namespace RFIDify.Spotify.Apis.WebApi.RequestResponse;
+﻿using RFIDify.Spotify.Apis.WebApi.RequestResponse.Items;
+
+namespace RFIDify.Spotify.Apis.WebApi.RequestResponse;
 
 public record PlayRequest : ISpotifyRequest
 {

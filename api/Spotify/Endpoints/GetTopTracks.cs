@@ -1,4 +1,6 @@
 ﻿using RFIDify.Spotify.Apis.WebApi;
+using RFIDify.Spotify.Apis.WebApi.RequestResponse;
+using RFIDify.Spotify.Apis.WebApi.RequestResponse.Items;
 
 namespace RFIDify.Spotify.Endpoints;
 
@@ -10,7 +12,7 @@ public static class GetTopTracks
         .MapGet("/tracks", Handle)
         .WithSummary("Get the current user's top tracks.");
 
-    private static async Task<SpotifyPagedResponse<SpotifyTrack>> Handle([AsParameters] GetTopTracksRequest request, ISpotifyWebApi api, CancellationToken cancellationToken)
+    private static async Task<PagedResponse<Track>> Handle([AsParameters] GetTopTracksRequest request, ISpotifyWebApi api, CancellationToken cancellationToken)
     {
         return await api.GetTopTracks(request.Offset, cancellationToken);
     }

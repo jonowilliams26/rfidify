@@ -1,4 +1,6 @@
 ﻿using RFIDify.Spotify.Apis.WebApi;
+using RFIDify.Spotify.Apis.WebApi.RequestResponse;
+using RFIDify.Spotify.Apis.WebApi.RequestResponse.Items;
 
 namespace RFIDify.Spotify.Endpoints;
 
@@ -18,7 +20,7 @@ public static class Search
         .MapGet("/search", Handle)
         .WithSummary("Search for items on Spotify.");
 
-    private static async Task<SpotifyPagedResponse<SpotifyItem>> Handle([AsParameters] SearchRequest request, ISpotifyWebApi api, CancellationToken cancellationToken)
+    private static async Task<PagedResponse<SpotifyItem>> Handle([AsParameters] SearchRequest request, ISpotifyWebApi api, CancellationToken cancellationToken)
     {
         return await api.Search(request.Search, request.Type, cancellationToken);
     }
