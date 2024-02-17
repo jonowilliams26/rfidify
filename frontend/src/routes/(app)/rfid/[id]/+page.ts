@@ -2,12 +2,12 @@ import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 import type { ApiResponseWithData, FetchFn } from '$lib/api/fetch';
 import { isSpotifyItemType } from '$lib/api/types';
-import type { PagedResponse, SpotifyItem, SpotifyItemType } from '$lib/api/types';
-import { getPlaylists, getSavedAlbums, getTopArtists, getTopTracks } from '$lib/api/endpoints';
+import { SpotifyItemTypes, type PagedResponse, type SpotifyItem, type SpotifyItemType } from '$lib/api/types';
+import { getPlaylists, getSavedAlbums, getTopArtists, getTopTracks, searchForSpotifyItems } from '$lib/api/endpoints';
 
 export const load = (async ({ fetch, url }) => {
 
-    const type = url.searchParams.get('type') ?? 'Track';
+    const type = url.searchParams.get('type') ?? SpotifyItemTypes.track;
     const search = url.searchParams.get('search');
 
     if (!isSpotifyItemType(type)) {
@@ -23,18 +23,28 @@ export const load = (async ({ fetch, url }) => {
 }) satisfies PageLoad;
 
 async function getSpotifyItems(fetch: FetchFn, type: SpotifyItemType, search: string | null): Promise<PagedResponse<SpotifyItem>> {
+    
+    if(search){
+        const response = await searchForSpotifyItems(fetch, search, type);
+        if (!response.ok) {
+            return Promise.reject(response);
+        }
+        return response.data;
+    }
+
+    
     let response: ApiResponseWithData<PagedResponse<SpotifyItem>>;
     switch (type) {
-        case 'Track':
+        case SpotifyItemTypes.track:
             response = await getTopTracks(fetch);
             break;
-        case 'Artist':
+        case SpotifyItemTypes.artist:
             response = await getTopArtists(fetch);
             break;
-        case 'Album':
+        case SpotifyItemTypes.album:
             response = await getSavedAlbums(fetch);
             break;
-        case 'Playlist':
+        case SpotifyItemTypes.playlist:
             response = await getPlaylists(fetch);
             break;
         default:

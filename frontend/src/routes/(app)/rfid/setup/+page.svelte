@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
-	import type { PageData } from './$types';
+	import { onMount } from 'svelte';
 	import { Margin } from 'radix-icons-svelte';
 	import * as signalR from '@microsoft/signalr';
 	import { PUBLIC_API_URL } from '$env/static/public';
@@ -9,8 +8,6 @@
 	type RFIDScannedMessage = {
 		id: string;
 	};
-
-	export let data: PageData;
 
 	onMount(() => {
 		console.log('RFID Hub: Connecting...');

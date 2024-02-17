@@ -1,5 +1,5 @@
 import { putJson, post, get, getJson, $delete, type FetchFn, put } from "./fetch";
-import type { Album, Artist, PagedResponse, Playlist, RFID, Track } from "./types";
+import type { Album, Artist, PagedResponse, Playlist, RFID, SpotifyItem, SpotifyItemType, Track } from "./types";
 
 type SetSpotifyCredentialsRequest = {
     clientId: string;
@@ -75,4 +75,12 @@ type CreateOrUpdateRFIDRequest = {
 }
 export async function createOrUpdateRFID(fetch: FetchFn, request: CreateOrUpdateRFIDRequest) {
     return await put('/rfids', request, fetch);
+}
+
+export async function searchForSpotifyItems(fetch: FetchFn, search: string, type: SpotifyItemType) {
+    const searchParams = new URLSearchParams();
+    searchParams.set('search', search);
+    searchParams.set('type', type);
+    const uri = `/spotify/search?${searchParams}`;
+    return await getJson<PagedResponse<SpotifyItem>>(uri, fetch);
 }

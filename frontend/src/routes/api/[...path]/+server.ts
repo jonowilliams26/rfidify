@@ -3,7 +3,7 @@ import { PRIVATE_API_URL } from "$env/static/private"
 
 export const fallback: RequestHandler = async ({ request, fetch, url }) => {
     request = new Request(
-        url.pathname.replace('/api', PRIVATE_API_URL),
+        url.pathname.replace('/api', PRIVATE_API_URL) + url.search,
         request,
     );
     return fetch(request);

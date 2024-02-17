@@ -1,8 +1,8 @@
 export const SpotifyItemTypes = {
-    track: 'Track',
-    album: 'Album',
-    artist: 'Artist',
-    playlist: 'Playlist'
+    track: 'track',
+    album: 'album',
+    artist: 'artist',
+    playlist: 'playlist'
 } as const;
 
 const SpotifyItemTypeList = [SpotifyItemTypes.track, SpotifyItemTypes.album, SpotifyItemTypes.artist, SpotifyItemTypes.playlist] as const;

@@ -3,12 +3,15 @@
 	import { Link1, Person } from 'radix-icons-svelte';
 	import { cn } from '$lib/utils';
 	import { tv } from 'tailwind-variants';
+	import { SpotifyItemTypes } from '$lib/api/types';
 
 	export let rfid: string | undefined = undefined;
 	export let spotifyItem: SpotifyItem;
 	export let size: 'default' | 'sm' = 'default';
 	$: image = () => {
-		const images = spotifyItem.type === 'Track' ? spotifyItem.album.images : spotifyItem.images;
+		const images = spotifyItem.type === SpotifyItemTypes.track 
+			? spotifyItem.album.images 
+			: spotifyItem.images;
 
 		if (!images || images.length === 0) {
 			return undefined;
@@ -95,7 +98,7 @@
 	<div class="flex flex-col space-y-1 truncate">
 		<p class={cn(nameVariants({ size }))}>{spotifyItem.name}</p>
 		<div class="text-muted-foreground space-y-1 truncate">
-			{#if spotifyItem.type === 'Track' || spotifyItem.type === 'Album'}
+			{#if spotifyItem.type === SpotifyItemTypes.track || spotifyItem.type === SpotifyItemTypes.album} 
 				<div class="flex items-center space-x-1 truncate">
 					<Person class={iconClass()} />
 					<span class={subTextClass()}>
@@ -103,7 +106,7 @@
 					</span>
 				</div>
 			{/if}
-			{#if spotifyItem.type === 'Playlist'}
+			{#if spotifyItem.type === SpotifyItemTypes.playlist}
 				<p class={subTextClass()}>{spotifyItem.description}</p>
 			{/if}
 			{#if rfid}

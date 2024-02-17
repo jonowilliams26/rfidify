@@ -21,10 +21,10 @@ public partial record SpotifyUri
         Id = sections[2];
         Type = sections[1] switch
         {
-            "album" => SpotifyItemType.Album,
-            "artist" => SpotifyItemType.Artist,
-            "playlist" => SpotifyItemType.Playlist,
-            "track" => SpotifyItemType.Track,
+            "album" => SpotifyItemType.album,
+            "artist" => SpotifyItemType.artist,
+            "playlist" => SpotifyItemType.playlist,
+            "track" => SpotifyItemType.track,
             _ => throw new ArgumentException("Invalid Spotify Uri", nameof(uri))
         };
     }

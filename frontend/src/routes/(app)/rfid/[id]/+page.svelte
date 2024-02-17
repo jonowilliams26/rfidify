@@ -22,6 +22,7 @@
 	let debounceTimer: number;
 	$: search = $page.url.searchParams.get(searchParams.search) ?? '';
 	$: type = $page.url.searchParams.get(searchParams.type) ?? SpotifyItemTypes.track;
+	$: searchPlaceholder = `Search ${type}s`;
 
 	const debounce = (value: string) => {
 		clearTimeout(debounceTimer);
@@ -90,7 +91,7 @@
 		type="text"
 		on:input={(e) => debounce(e.currentTarget.value)}
 		value={search}
-		placeholder="Search tracks, albums, artists and playlists"
+		placeholder={searchPlaceholder}
 	/>
 </div>
 

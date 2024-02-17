@@ -13,6 +13,7 @@ public interface ISpotifyWebApi
     Task<SpotifyPagedResponse<SpotifyTrack>> GetTopTracks(int? offset, CancellationToken cancellationToken);
     Task<SpotifyPagedResponse<SpotifyAlbum>> GetSavedAlbums(int? offset, CancellationToken cancellationToken);
     Task<SpotifyTrack> GetTrack(string id, CancellationToken cancellationToken);
+    Task<SpotifyPagedResponse<SpotifyItem>> Search(string search, SpotifyItemType type, CancellationToken cancellationToken);
     Task Play(SpotifyItem item, CancellationToken cancellationToken);
 }
 
@@ -22,9 +23,9 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
 
     public async Task Play(SpotifyItem item, CancellationToken cancellationToken)
     {
-        PlayRequest request = item.Type switch
+        PlayRequest request = item switch
         {
-            SpotifyItemType.Track => new() { Uris = [item.Uri] },
+            SpotifyTrack => new() { Uris = [item.Uri] },
             _ => new() { ContextUri = item.Uri }
         };
 
@@ -33,10 +34,10 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
 
     public async Task<SpotifyItem> Get(SpotifyUri uri, CancellationToken cancellationToken) => uri.Type switch
     {
-        SpotifyItemType.Track => await GetTrack(uri.Id, cancellationToken),
-        SpotifyItemType.Album => await GetAlbum(uri.Id, cancellationToken),
-        SpotifyItemType.Artist => await GetArtist(uri.Id, cancellationToken),
-        SpotifyItemType.Playlist => await GetPlaylist(uri.Id, cancellationToken),
+        SpotifyItemType.track => await GetTrack(uri.Id, cancellationToken),
+        SpotifyItemType.album => await GetAlbum(uri.Id, cancellationToken),
+        SpotifyItemType.artist => await GetArtist(uri.Id, cancellationToken),
+        SpotifyItemType.playlist => await GetPlaylist(uri.Id, cancellationToken),
         _ => throw new NotImplementedException()
     };
 
@@ -84,19 +85,7 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
         var response = await httpClient.Get<SpotifyPagedResponse<SpotifyPlaylist>>(uri, cancellationToken);
         return new SpotifyPagedResponse<SpotifyPlaylist>
         {
-            Items = response.Items.Select(x => new SpotifyPlaylist
-            {
-                Id = x.Id,
-                Uri = x.Uri,
-                Name = x.Name,
-                Description = StripHtml(x.Description),
-                Images = x.Images.Select(x => new SpotifyImage
-                {
-                    Url = x.Url,
-                    Width = x.Width,
-                    Height = x.Height
-                }).ToList()
-            }).ToList(),
+            Items = response.Items.Select(RemoveHTMLFromPlaylist).ToList(),
             Total = response.Total,
             Limit = response.Limit,
             Next = response.Next,
@@ -105,22 +94,23 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
         };
     }
 
-    private static string? StripHtml(string? value)
+    private static SpotifyPlaylist RemoveHTMLFromPlaylist(SpotifyPlaylist playlist)
     {
-        if (value == null)
+        if (playlist.Description is null)
         {
-            return null;
+            return playlist;
         }
 
         var htmlDoc = new HtmlDocument();
-        htmlDoc.LoadHtml(value);
+        htmlDoc.LoadHtml(playlist.Description);
 
         if (htmlDoc == null)
         {
-            return value;
+            return playlist;
         }
 
-        return htmlDoc.DocumentNode.InnerText;
+        playlist.Description = htmlDoc.DocumentNode.InnerText;
+        return playlist;
     }
 
     public async Task<SpotifyPagedResponse<SpotifyAlbum>> GetSavedAlbums(int? offset, CancellationToken cancellationToken)
@@ -150,6 +140,47 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
         return $"{uri}{QueryString.Create(query)}";
     }
 
+    public async Task<SpotifyPagedResponse<SpotifyItem>> Search(string search, SpotifyItemType type, CancellationToken cancellationToken)
+    {
+        var query = new Dictionary<string, string?>
+        {
+            ["q"] = search,
+            ["type"] = type.ToString(),
+            ["limit"] = "20"
+        };
+
+        var uri = $"search{QueryString.Create(query)}";
+        var response = await httpClient.Get<SearchResponse>(uri, cancellationToken);
+
+        return type switch
+        {
+            SpotifyItemType.track => CreatePagedResponseFromSearchResponse(response.Tracks!),
+            SpotifyItemType.album => CreatePagedResponseFromSearchResponse(response.Albums!),
+            SpotifyItemType.artist => CreatePagedResponseFromSearchResponse(response.Artists!),
+            SpotifyItemType.playlist => CreatePagedResponseFromSearchResponse(response.Playlists!),
+            _ => throw new NotImplementedException()
+        };
+    }
+
+    private static SpotifyPagedResponse<SpotifyItem> CreatePagedResponseFromSearchResponse<T>(SpotifyPagedResponse<T> response) where T : SpotifyItem
+    {
+        var items = response.Items switch
+        {
+            List<SpotifyPlaylist> playlists => playlists.Select(RemoveHTMLFromPlaylist).ToList<SpotifyItem>(),
+            _ => [.. response.Items]
+        };
+
+        return new()
+        {
+            Items = items,
+            Total = response.Total,
+            Limit = response.Limit,
+            Next = response.Next,
+            Offset = response.Offset,
+            Previous = response.Previous
+        };
+    }
+
     private record PlayRequest
     {
         public string? ContextUri { get; init; }
@@ -159,5 +190,13 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
     private record GetSavedAlbumsResponseItem
     {
         public required SpotifyAlbum Album { get; init; }
+    }
+
+    private record SearchResponse
+    {
+        public SpotifyPagedResponse<SpotifyTrack>? Tracks { get; init; }
+        public SpotifyPagedResponse<SpotifyAlbum>? Albums { get; init; }
+        public SpotifyPagedResponse<SpotifyArtist>? Artists { get; init; }
+        public SpotifyPagedResponse<SpotifyPlaylist>? Playlists { get; init; }
     }
 }

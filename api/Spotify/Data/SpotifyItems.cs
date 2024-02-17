@@ -2,10 +2,10 @@
 
 namespace RFIDify.Spotify.Data;
 
-[JsonDerivedType(typeof(SpotifyTrack), typeDiscriminator: nameof(SpotifyItemType.Track))]
-[JsonDerivedType(typeof(SpotifyAlbum), typeDiscriminator: nameof(SpotifyItemType.Album))]
-[JsonDerivedType(typeof(SpotifyArtist), typeDiscriminator: nameof(SpotifyItemType.Artist))]
-[JsonDerivedType(typeof(SpotifyPlaylist), typeDiscriminator: nameof(SpotifyItemType.Playlist))]
+[JsonDerivedType(typeof(SpotifyTrack), typeDiscriminator: nameof(SpotifyItemType.track))]
+[JsonDerivedType(typeof(SpotifyAlbum), typeDiscriminator: nameof(SpotifyItemType.album))]
+[JsonDerivedType(typeof(SpotifyArtist), typeDiscriminator: nameof(SpotifyItemType.artist))]
+[JsonDerivedType(typeof(SpotifyPlaylist), typeDiscriminator: nameof(SpotifyItemType.playlist))]
 public abstract record SpotifyItem
 {
     public abstract SpotifyItemType Type { get; }
@@ -16,36 +16,36 @@ public abstract record SpotifyItem
 
 public enum SpotifyItemType
 {
-    Album,
-    Artist,
-    Playlist,
-    Track
+    album,
+    artist,
+    playlist,
+    track
 }
 
 public record SpotifyTrack : SpotifyItem
 {
-    public override SpotifyItemType Type => SpotifyItemType.Track;
+    public override SpotifyItemType Type => SpotifyItemType.track;
     public required SpotifyAlbum Album { get; init; }
     public List<SpotifyArtist> Artists { get; init; } = [];
 }
 
 public record SpotifyAlbum : SpotifyItem
 {
-    public override SpotifyItemType Type => SpotifyItemType.Album;
+    public override SpotifyItemType Type => SpotifyItemType.album;
     public List<SpotifyArtist> Artists { get; init; } = [];
     public List<SpotifyImage> Images { get; init; } = [];
 }
 
 public record SpotifyArtist : SpotifyItem
 {
-    public override SpotifyItemType Type => SpotifyItemType.Artist;
+    public override SpotifyItemType Type => SpotifyItemType.artist;
     public List<SpotifyImage> Images { get; init; } = [];
 }
 
 public record SpotifyPlaylist : SpotifyItem
 {
-    public override SpotifyItemType Type => SpotifyItemType.Playlist;
-    public string? Description { get; init; }
+    public override SpotifyItemType Type => SpotifyItemType.playlist;
+    public string? Description { get; set; }
     public List<SpotifyImage> Images { get; init; } = [];
 }
 
