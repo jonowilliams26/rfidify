@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { Button } from '$lib/components/ui/button';
-	import { RFID } from '$lib/components/rfid';
 	import { Card } from '$lib/components/ui/card';
 	import { DotsHorizontal, Pencil1, Trash } from 'radix-icons-svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { deleteRFID } from '$lib/api/endpoints';
 	import { toast } from 'svelte-sonner';
+	import { SpotifyItem } from '$lib/components/spotify';
 
 	export let data: PageData;
 
@@ -30,7 +30,7 @@
 	<div class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
 		{#each data.rfids as rfid}
 			<Card class="flex items-start justify-between p-2.5">
-				<RFID {rfid} />
+				<SpotifyItem rfid={rfid.id} spotifyItem={rfid.spotifyItem}/>
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger asChild let:builder>
 						<Button builders={[builder]} variant="ghost" size="icon" class="flex-shrink-0">

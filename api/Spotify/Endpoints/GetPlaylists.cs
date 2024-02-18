@@ -5,6 +5,13 @@ using RFIDify.Spotify.Apis.WebApi.RequestResponse.Items;
 namespace RFIDify.Spotify.Endpoints;
 
 public record GetPlaylistsRequest(int? Offset);
+public class GetPlaylistsRequestValidator : AbstractValidator<GetPlaylistsRequest>
+{
+    public GetPlaylistsRequestValidator()
+    {
+        RuleFor(x => x.Offset).GreaterThanOrEqualTo(0);
+    }
+}
 
 public static class GetPlaylists
 {

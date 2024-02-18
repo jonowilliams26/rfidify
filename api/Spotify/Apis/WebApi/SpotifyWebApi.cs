@@ -15,7 +15,7 @@ public interface ISpotifyWebApi
     Task<PagedResponse<Track>> GetTopTracks(int? offset, CancellationToken cancellationToken);
     Task<PagedResponse<Album>> GetAlbums(int? offset, CancellationToken cancellationToken);
     Task<Track> GetTrack(string id, CancellationToken cancellationToken);
-    Task<PagedResponse<SpotifyItem>> Search(string search, SpotifyItemType type, CancellationToken cancellationToken);
+    Task<PagedResponse<SpotifyItem>> Search(string search, SpotifyItemType type, int? offset, CancellationToken cancellationToken);
     Task Play(SpotifyItem item, CancellationToken cancellationToken);
 }
 
@@ -121,9 +121,9 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
         };
     }
 
-    public async Task<PagedResponse<SpotifyItem>> Search(string search, SpotifyItemType type, CancellationToken cancellationToken)
+    public async Task<PagedResponse<SpotifyItem>> Search(string search, SpotifyItemType type, int? offset, CancellationToken cancellationToken)
     {
-        var request = new SearchRequest(search, type);
+        var request = new SearchRequest(search, type, offset);
         var response = await httpClient.GetFromJsonAsync<SearchResponse>(request, cancellationToken);
         return type switch
         {
