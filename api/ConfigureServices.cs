@@ -1,4 +1,5 @@
-﻿using RFIDify.Services;
+﻿using RFIDify.Api.ExceptionHandlers;
+using RFIDify.Services;
 using RFIDify.Spotify.Apis.AccountsApi;
 using RFIDify.Spotify.Apis.DelegatingHandlers;
 using RFIDify.Spotify.Apis.WebApi;
@@ -20,6 +21,8 @@ public static class ConfigureServices
         builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly, includeInternalTypes: true);
         builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         builder.Services.AddSignalR();
+        builder.Services.AddExceptionHandler<SpotifyRequestExceptionHandler>();
+        builder.Services.AddExceptionHandler<UnhandledExceptionHandler>();
     }
 
     private static void AddJsonSerialization(this WebApplicationBuilder builder)

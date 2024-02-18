@@ -9,6 +9,7 @@ public static class ConfigureApp
     public static async Task Configure(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
+        app.UseExceptionHandler(_ => { });
         app.UseSwagger();
         app.UseSwaggerUI();
         app.UseHttpsRedirection();
