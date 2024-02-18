@@ -37,7 +37,7 @@ while True:
     print(f'Sending RFID: {rfid}')
     last_seen_rfid = rfid
     last_seen_at = datetime.now()
-    data = {"rfid": id}
+    data = { "rfid": rfid }
 
     response = post(url, json=data)
     if response.status_code == 200:
