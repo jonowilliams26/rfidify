@@ -36,3 +36,8 @@ A RFID reader that plays things on Spotify
 9. Open a web browser and go to `http://<your raspberry pi IP>`
 10. You will be prompted to enter your Spotify `client id` and `secret` which was created in `step 4`
 11. You app is setup and ready to run!
+
+## Architecture
+![image](https://github.com/jonathanjameswilliams26/rfidify/assets/37890156/6dee1003-a9ee-4d06-89d3-7d280fb2114c)
+
+
