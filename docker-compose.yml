@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   frontend:
     build:
@@ -6,6 +6,7 @@ services:
     ports:
       - "3000:3000"
     container_name: frontend
+    restart: always
 
   api:
     build:
@@ -16,6 +17,7 @@ services:
     ports:
       - "8080:8080"
     container_name: api
+    restart: always
 
   nginx:
     image: nginx:latest
@@ -27,12 +29,14 @@ services:
       - api
       - frontend
     container_name: nginx
+    restart: always
 
   rfid:
     build:
       context: rfid
     privileged: true
     container_name: rfid
+    restart: always
 
 volumes:
   db-data:
