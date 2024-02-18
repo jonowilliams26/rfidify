@@ -53,7 +53,7 @@
 	}
 </script>
 
-<ul role="list" class="max-h-[700px] divide-y overflow-y-auto" bind:this={listElement}>
+<ul role="list" class="max-h-[800px] divide-y overflow-y-auto" bind:this={listElement}>
 	{#each items as spotifyItem}
 		<li class="flex items-center justify-between py-2">
 			<SpotifyItemComponent {spotifyItem} size="sm" />

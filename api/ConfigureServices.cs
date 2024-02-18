@@ -3,6 +3,7 @@ using RFIDify.Services;
 using RFIDify.Spotify.Apis.AccountsApi;
 using RFIDify.Spotify.Apis.DelegatingHandlers;
 using RFIDify.Spotify.Apis.WebApi;
+using RFIDify.Spotify.BackgroundServices;
 using Serilog;
 using System.Text.Json.Serialization;
 
@@ -23,6 +24,7 @@ public static class ConfigureServices
         builder.Services.AddSignalR();
         builder.Services.AddExceptionHandler<SpotifyRequestExceptionHandler>();
         builder.Services.AddExceptionHandler<UnhandledExceptionHandler>();
+        builder.Services.AddHostedService<RefreshPlaylistsArtworkBackgroundService>();
     }
 
     private static void AddJsonSerialization(this WebApplicationBuilder builder)
