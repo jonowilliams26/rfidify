@@ -27,7 +27,7 @@ while True:
 
     rfid = result['id_formatted']
 
-    below_last_seen_threshold = last_seen_at is not None and (datetime.now() - last_seen_at).total_seconds < last_seen_threshold_seconds
+    below_last_seen_threshold = last_seen_at is not None and (datetime.now() - last_seen_at).total_seconds() < last_seen_threshold_seconds
 
     if rfid == last_seen_rfid and below_last_seen_threshold:
         print(f'RFID: {rfid} already scanned within the last {last_seen_threshold_seconds} seconds. Skipping.')
@@ -37,7 +37,7 @@ while True:
     print(f'Sending RFID: {rfid}')
     last_seen_rfid = rfid
     last_seen_at = datetime.now()
-    data = { "rfid": rfid }
+    data = { "id": rfid }
 
     response = post(url, json=data)
     if response.status_code == 200:
