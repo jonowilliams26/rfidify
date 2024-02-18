@@ -5,6 +5,13 @@ using RFIDify.Spotify.Apis.WebApi.RequestResponse.Items;
 namespace RFIDify.Spotify.Endpoints;
 
 public record GetTopArtistsRequest(int? Offset);
+public class GetTopArtistsRequestValidator : AbstractValidator<GetTopArtistsRequest>
+{
+    public GetTopArtistsRequestValidator()
+    {
+        RuleFor(x => x.Offset).GreaterThanOrEqualTo(0);
+    }
+}
 
 public static class GetTopArtists
 {

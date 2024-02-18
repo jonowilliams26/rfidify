@@ -5,6 +5,13 @@ using RFIDify.Spotify.Apis.WebApi.RequestResponse.Items;
 namespace RFIDify.Spotify.Endpoints;
 
 public record GetSavedAlbumsRequest(int? Offset);
+public class GetSavedAlbumsRequestValidator : AbstractValidator<GetSavedAlbumsRequest>
+{
+    public GetSavedAlbumsRequestValidator()
+    {
+        RuleFor(x => x.Offset).GreaterThanOrEqualTo(0);
+    }
+}
 
 public static class GetSavedAlbums
 {

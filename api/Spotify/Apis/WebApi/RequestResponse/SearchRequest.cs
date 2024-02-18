@@ -2,14 +2,15 @@
 
 namespace RFIDify.Spotify.Apis.WebApi.RequestResponse;
 
-public record SearchRequest(string Search, SpotifyItemType Type) : ISpotifyRequest
+public record SearchRequest(string Search, SpotifyItemType Type, int? Offset) : ISpotifyRequest
 {
     public string Uri()
     {
         var query = new Dictionary<string, string?>
         {
             [QueryParams.Search] = Search,
-            [QueryParams.Type] = Type.ToString()
+            [QueryParams.Type] = Type.ToString(),
+            [QueryParams.Offset] = Offset?.ToString() ?? "0"
         };
 
         return $"search{QueryString.Create(query)}";

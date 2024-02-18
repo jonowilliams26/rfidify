@@ -4,14 +4,14 @@
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { Input } from '$lib/components/ui/input';
 	import { goto, invalidate } from '$app/navigation';
-	import { Skeleton } from '$lib/components/ui/skeleton';
-	import { SpotifyItemTypes, type SpotifyItemType, type SpotifyItem } from '$lib/api/types';
-	import { SpotifyItem as SpotifyItemComponent } from '$lib/components/spotify';
-	import * as Alert from '$lib/components/ui/alert';
-	import { ExclamationTriangle, Link1 } from 'radix-icons-svelte';
-	import { Button } from '$lib/components/ui/button';
-	import { createOrUpdateRFID } from '$lib/api/endpoints';
+	import {
+		SpotifyItemTypes,
+		type SpotifyItemType,
+		type SpotifyItem,
+	} from '$lib/api/types';
+	import { createOrUpdateRFID, getSpotifyItems } from '$lib/api/endpoints';
 	import { toast } from 'svelte-sonner';
+	import { SpotifyItemsList, LoadingShellSpotifyItemsList, ErrorAlert } from './components';
 
 	const searchParams = {
 		search: 'search',
@@ -43,7 +43,7 @@
 		goto(`?${query}`);
 	}
 
-	async function linkSpotifyItemToRFID(spotifyItem: SpotifyItem) {
+	async function onLinkClick(spotifyItem: SpotifyItem) {
 		const response = await createOrUpdateRFID(fetch, {
 			rfid: data.rfid.id,
 			spotifyUri: spotifyItem.uri
@@ -56,9 +56,20 @@
 
 		invalidate(`/api/rfids/${data.rfid.id}`);
 	}
+
+	async function onLoadMore(offset?: number) {
+		console.log('Loading more Spotify items...');
+		const response = await getSpotifyItems(fetch, type as SpotifyItemType, search, offset);
+		if (response.ok) {
+			return response.data;
+		}
+
+		toast.error('Sorry, something went wrong. Please try again.');
+		return undefined;
+	}
 </script>
 
-<div class="flex flex-col items-center space-x-2 space-y-2 pb-6 pt-12 md:flex-row md:space-y-0">
+<div class="flex flex-col items-center space-x-2 space-y-2 pb-6 md:flex-row md:space-y-0">
 	<Tabs.Root value={type} class="w-full md:w-[500px]">
 		<Tabs.List class="grid grid-cols-4">
 			<Tabs.Trigger
@@ -96,39 +107,15 @@
 </div>
 
 {#await data.spotifyItems}
-	<ul role="list" class="divide-y">
-		{#each Array(5) as _}
-			<div class="flex items-center justify-between py-4">
-				<div class="flex items-center space-x-2">
-					<Skeleton class="h-14 w-14 rounded-lg" />
-					<div class="space-y-2">
-						<Skeleton class="h-4 w-40 rounded-lg" />
-						<Skeleton class="h-4 w-24 rounded-lg" />
-					</div>
-				</div>
-				<Skeleton class="h-8 w-8 rounded-full" />
-			</div>
-		{/each}
-	</ul>
+	<LoadingShellSpotifyItemsList />
 {:then spotifyItems}
 	{#if spotifyItems}
-		<ul role="list" class="divide-y pt-6">
-			{#each spotifyItems.items.filter((x) => x.uri !== data.rfid.spotifyItem?.uri) as spotifyItem}
-				<div class="flex items-center justify-between py-2">
-					<SpotifyItemComponent {spotifyItem} size="sm" />
-					<Button variant="ghost" size="icon" on:click={() => linkSpotifyItemToRFID(spotifyItem)}>
-						<Link1 />
-					</Button>
-				</div>
-			{/each}
-		</ul>
+		<SpotifyItemsList
+			data={spotifyItems}
+			{onLinkClick}
+			{onLoadMore}
+		/>
 	{:else}
-		<Alert.Root variant="destructive">
-			<ExclamationTriangle class="h-4 w-4" />
-			<Alert.Title>Sorry, something went wrong</Alert.Title>
-			<Alert.Description>
-				An unexpected error occurred trying to load data from Spotify. Please try again.
-			</Alert.Description>
-		</Alert.Root>
+		<ErrorAlert />
 	{/if}
 {/await}
