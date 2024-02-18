@@ -1,5 +1,5 @@
 # rfidify
-A RFID reader that plays things on Spotify
+A Raspberry PI RFID reader that plays things on Spotify
 
 ## Hardware
 - [Raspberry PI 5](https://www.raspberrypi.com/products/raspberry-pi-5/)
