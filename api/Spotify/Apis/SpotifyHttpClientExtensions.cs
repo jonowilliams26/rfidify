@@ -10,7 +10,7 @@ public static class SpotifyHttpClientExtensions
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
     };
 
-    public static async Task<HttpResponseMessage> PutAsJsonAsync(this HttpClient httpClient, ISpotifyRequest request, CancellationToken cancellationToken)
+    public static async Task<HttpResponseMessage> PutAsJsonAsync<TRequest>(this HttpClient httpClient, TRequest request, CancellationToken cancellationToken) where TRequest : ISpotifyRequest
     {
         return await httpClient.PutAsJsonAsync(request.Uri(), request, jsonSerializerOptions, cancellationToken);
     }
