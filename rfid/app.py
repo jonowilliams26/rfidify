@@ -72,13 +72,16 @@ def send_rfid(rfid: str | None):
 
     print(f'Sending RFID: {rfid}')
     data = { "id": rfid }
-    response = post(url, json=data)
 
-    if response.status_code == ok or response.status_code == not_found:
-        print(f'Successfully sent RFID: {rfid}')
-        beep()
-    else:
-        print(f'An unexpected error occurred trying to send RFID: {rfid} response: {response}')
+    try:
+        response = post(url, json=data)
+        if response.status_code == ok or response.status_code == not_found:
+            print(f'Successfully sent RFID: {rfid}')
+            beep()
+        else:
+            response.raise_for_status()
+    except:
+        print(f'An unexpected error occurred trying to send RFID: {rfid}')
         beep()
         beep()
         beep()
