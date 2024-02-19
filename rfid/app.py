@@ -53,6 +53,8 @@ def read_rfid() -> str | None:
         print(f'RFID: {rfid} already scanned within the last {last_seen_threshold_seconds} seconds. Skipping.')
         return None
 
+    global last_seen_rfid
+    global last_seen_at
     last_seen_rfid = rfid
     last_seen_at = datetime.now()
     return rfid
