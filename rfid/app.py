@@ -82,14 +82,12 @@ def send_rfid(rfid: str | None):
             response.raise_for_status()
     except:
         print(f'An unexpected error occurred trying to send RFID: {rfid}')
-        beep()
-        sleep_ms(100)
-        beep()
-        sleep_ms(100)
-        beep()
+        beep(3)
 
-def beep():
-    buzzer.tone(buzz_frequency_hz, buzz_duration_ms)
+def beep(amount: int = 1):
+    for x in range(amount):
+        buzzer.tone(buzz_frequency_hz, buzz_duration_ms)
+        sleep_ms(250)
 
 # Main
 print("Starting RFID scanner...")
