@@ -47,14 +47,14 @@ def read_rfid() -> str | None:
     rfid = result['id_formatted']
     print(f'Successfully read RFID: {rfid} from RFID module')
 
+    global last_seen_rfid
+    global last_seen_at
     below_last_seen_threshold = last_seen_at is not None and (datetime.now() - last_seen_at).total_seconds() < last_seen_threshold_seconds
 
     if rfid == last_seen_rfid and below_last_seen_threshold:
         print(f'RFID: {rfid} already scanned within the last {last_seen_threshold_seconds} seconds. Skipping.')
         return None
 
-    global last_seen_rfid
-    global last_seen_at
     last_seen_rfid = rfid
     last_seen_at = datetime.now()
     return rfid
