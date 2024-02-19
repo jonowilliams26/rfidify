@@ -76,10 +76,15 @@ def send_rfid(rfid: str | None):
 
     if response.status_code == ok or response.status_code == not_found:
         print(f'Successfully sent RFID: {rfid}')
-        buzzer.tone(buzz_frequency_hz, buzz_duration_ms)
+        beep()
     else:
         print(f'An unexpected error occurred trying to send RFID: {rfid} response: {response}')
+        beep()
+        beep()
+        beep()
 
+def beep():
+    buzzer.tone(buzz_frequency_hz, buzz_duration_ms)
 
 # Main
 print("Starting RFID scanner...")
