@@ -19,7 +19,8 @@ public static class Search
 {
     public static void MapSearch(this IEndpointRouteBuilder app) => app
         .MapGet("/search", Handle)
-        .WithSummary("Search for items on Spotify.");
+        .WithSummary("Search for items on Spotify.")
+        .WithRequestValidation<SearchRequest>();
 
     private static async Task<PagedResponse<SpotifyItem>> Handle([AsParameters] SearchRequest request, ISpotifyWebApi api, CancellationToken cancellationToken)
     {

@@ -17,7 +17,8 @@ public static class GetTopArtists
 {
     public static void MapGetTopArtists(this IEndpointRouteBuilder app) => app
         .MapGet("/artists", Handle)
-        .WithSummary("Get the current user's top artists.");
+        .WithSummary("Get the current user's top artists.")
+        .WithRequestValidation<GetTopArtistsRequest>();
 
     private static async Task<PagedResponse<Artist>> Handle([AsParameters] GetTopArtistsRequest request, ISpotifyWebApi api, CancellationToken cancellationToken)
     {
