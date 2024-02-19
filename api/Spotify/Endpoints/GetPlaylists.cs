@@ -17,7 +17,8 @@ public static class GetPlaylists
 {
     public static void MapGetPlaylists(this IEndpointRouteBuilder app) => app
         .MapGet("/playlists", Handle)
-        .WithSummary("Get the current user's playlists.");
+        .WithSummary("Get the current user's playlists.")
+        .WithRequestValidation<GetPlaylistsRequest>();
 
     private static async Task<PagedResponse<Playlist>> Handle([AsParameters] GetPlaylistsRequest request, ISpotifyWebApi api, CancellationToken cancellationToken)
     {

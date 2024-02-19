@@ -17,7 +17,8 @@ public static class GetSavedAlbums
 {
     public static void MapGetSavedAlbums(this IEndpointRouteBuilder app) => app
         .MapGet("/albums", Handle)
-        .WithSummary("Get the current user's saved albums.");
+        .WithSummary("Get the current user's saved albums.")
+        .WithRequestValidation<GetSavedAlbumsRequest>();
 
     private static async Task<PagedResponse<Album>> Handle([AsParameters] GetSavedAlbumsRequest request, ISpotifyWebApi api, CancellationToken cancellationToken)
     {

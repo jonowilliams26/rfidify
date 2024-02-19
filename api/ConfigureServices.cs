@@ -19,7 +19,7 @@ public static class ConfigureServices
         builder.AddSwagger();
         builder.AddDatabase();
         builder.AddSpotifyApis();
-        builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly, includeInternalTypes: true);
+        builder.Services.AddValidatorsFromAssembly(typeof(ConfigureServices).Assembly);
         builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         builder.Services.AddSignalR();
         builder.Services.AddExceptionHandler<SpotifyRequestExceptionHandler>();
