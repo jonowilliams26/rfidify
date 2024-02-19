@@ -83,7 +83,9 @@ def send_rfid(rfid: str | None):
     except:
         print(f'An unexpected error occurred trying to send RFID: {rfid}')
         beep()
+        sleep_ms(100)
         beep()
+        sleep_ms(100)
         beep()
 
 def beep():
