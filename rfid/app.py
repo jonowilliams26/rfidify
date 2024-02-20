@@ -108,8 +108,8 @@ def show_currently_playing():
         if response.status_code == ok:
             data = response.json()
             display.text(data['name'], 0, 0, 1)
-            display.text(data['artists'], 0, 30, 1)
-            display.text(data['progress'], 0, 60, 1)
+            display.text(data['artists'], 0, 15, 1)
+            display.text(data['progress'], 0, 30, 1)
             display.show()
         elif response.status_code == not_found:
             display.text("Nothing playing", 0, 0, 1)
