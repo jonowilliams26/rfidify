@@ -28,6 +28,7 @@ buzzer.volume(max_buzzer_volume)
 last_seen_rfid = None
 last_seen_at = None
 ticks = time()
+last_screen_update = time()
 
 
 # Functions
@@ -96,9 +97,9 @@ def beep(amount: int = 1):
         sleep_ms(250)
 
 def show_currently_playing():
-
+    global last_screen_update
     now = time()
-    if now - ticks < 5:
+    if now - last_screen_update < 5:
         return
     
     display.fill(0)
@@ -118,6 +119,8 @@ def show_currently_playing():
     except:
         display.text("Sorry, something went wrong", 0, 0, 1)
         display.show()
+
+    last_screen_update = now
 
 # Main
 print("Starting RFID scanner...")
