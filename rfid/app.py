@@ -28,7 +28,7 @@ buzzer.volume(max_buzzer_volume)
 last_seen_rfid = None
 last_seen_at = None
 ticks = time()
-last_screen_update = time()
+last_screen_update = None
 
 
 # Functions
@@ -99,7 +99,7 @@ def beep(amount: int = 1):
 def show_currently_playing():
     global last_screen_update
     now = time()
-    if now - last_screen_update < 5:
+    if last_screen_update is not None and now - last_screen_update < 5:
         return
     
     display.fill(0)
