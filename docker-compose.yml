@@ -37,6 +37,8 @@ services:
     privileged: true
     container_name: rfid
     restart: always
+    depends_on:
+      - api
 
 volumes:
   db-data:
