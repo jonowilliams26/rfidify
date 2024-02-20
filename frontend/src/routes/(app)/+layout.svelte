@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import { Rocket } from 'radix-icons-svelte';
+	import { LinkBreak2 } from 'radix-icons-svelte';
 </script>
 
 <div class="min-h-full">
@@ -12,7 +12,7 @@
                     <span class="text-primary font-bold text-lg">RFIDify</span>
 				</a>
 				<Button href="/rfid/setup">
-					<Rocket class="mr-2" />
+					<LinkBreak2 class="mr-2" />
 					Add RFID
 				</Button>
 			</div>
