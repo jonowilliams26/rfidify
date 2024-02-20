@@ -27,6 +27,7 @@ public static class Endpoints
         endpoints.MapGetPlaylists();
         endpoints.MapGetSavedAlbums();
         endpoints.MapSearch();
+        endpoints.MapGetCurrentlyPlaying();
     }
 
     private static void MapRFIDEndpoints(this IEndpointRouteBuilder app)

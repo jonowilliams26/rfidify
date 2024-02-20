@@ -17,6 +17,7 @@ public interface ISpotifyWebApi
     Task<Track> GetTrack(string id, CancellationToken cancellationToken);
     Task<PagedResponse<SpotifyItem>> Search(string search, SpotifyItemType type, int? offset, CancellationToken cancellationToken);
     Task Play(SpotifyItem item, CancellationToken cancellationToken);
+    Task<GetCurrentlyPlayingResponse> GetCurrentlyPlaying(CancellationToken cancellationToken);
 }
 
 public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
@@ -154,8 +155,9 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
         };
     }
 
-    private record GetSavedAlbumsResponseItem
+    public async Task<GetCurrentlyPlayingResponse> GetCurrentlyPlaying(CancellationToken cancellationToken)
     {
-        public required Album Album { get; init; }
+        var request = new GetCurrentlyPlayingRequest();
+        return await httpClient.GetFromJsonAsync<GetCurrentlyPlayingResponse>(request, cancellationToken);
     }
 }

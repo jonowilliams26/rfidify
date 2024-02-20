@@ -1,4 +1,6 @@
-﻿namespace RFIDify.Spotify.Apis.WebApi.RequestResponse;
+﻿using RFIDify.Spotify.Apis.WebApi.RequestResponse.Items;
+
+namespace RFIDify.Spotify.Apis.WebApi.RequestResponse;
 
 public record GetAlbumsRequest(int? Offset) : ISpotifyRequest
 {
@@ -11,4 +13,9 @@ public record GetAlbumsRequest(int? Offset) : ISpotifyRequest
 
         return $"me/albums{QueryString.Create(query)}";
     }
+}
+
+public record GetSavedAlbumsResponseItem
+{
+    public required Album Album { get; init; }
 }

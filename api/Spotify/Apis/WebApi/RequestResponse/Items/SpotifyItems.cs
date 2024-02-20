@@ -2,6 +2,7 @@
 
 namespace RFIDify.Spotify.Apis.WebApi.RequestResponse.Items;
 
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
 [JsonDerivedType(typeof(Track), typeDiscriminator: nameof(SpotifyItemType.track))]
 [JsonDerivedType(typeof(Album), typeDiscriminator: nameof(SpotifyItemType.album))]
 [JsonDerivedType(typeof(Artist), typeDiscriminator: nameof(SpotifyItemType.artist))]
@@ -19,5 +20,5 @@ public enum SpotifyItemType
     album,
     artist,
     playlist,
-    track
+    track,
 }
