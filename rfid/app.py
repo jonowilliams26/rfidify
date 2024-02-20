@@ -4,6 +4,7 @@ from PiicoDev_Unified import sleep_ms
 from requests import post, get
 from PiicoDev_Buzzer import PiicoDev_Buzzer
 from PiicoDev_SSD1306 import create_PiicoDev_SSD1306
+from time import time
 
 
 # Contants
@@ -26,6 +27,8 @@ buzzer = PiicoDev_Buzzer()
 buzzer.volume(max_buzzer_volume)
 last_seen_rfid = None
 last_seen_at = None
+currently_playing = None
+ticks = time()
 
 
 # Functions
@@ -94,7 +97,12 @@ def beep(amount: int = 1):
         sleep_ms(250)
 
 def show_currently_playing():
-    display.fill(0)
+    now = time()
+    global ticks
+    if now - ticks < 5:
+        return
+    
+    ticks = now
     try:
         response = get(currently_playing_url)
         if response.status_code == ok:
