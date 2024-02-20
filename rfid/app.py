@@ -1,13 +1,16 @@
 from datetime import datetime
 from PiicoDev_RFID import PiicoDev_RFID
 from PiicoDev_Unified import sleep_ms
-from requests import post
+from requests import post, get
 from PiicoDev_Buzzer import PiicoDev_Buzzer
+from PiicoDev_SSD1306 import create_PiicoDev_SSD1306
+
 
 # Contants
 # ------------------------------
 last_seen_threshold_seconds = 1
-url = "http://api:8080/rfids/scan"
+scan_url = "http://api:8080/rfids/scan"
+currently_playing_url = "http://api:8080/spotify/currently-playing"
 max_buzzer_volume = 2
 buzz_duration_ms = 100
 buzz_frequency_hz = 1000
@@ -18,6 +21,7 @@ not_found = 404
 # Variables
 # ------------------------------
 rfid_module = PiicoDev_RFID()
+display = create_PiicoDev_SSD1306()
 buzzer = PiicoDev_Buzzer()
 buzzer.volume(max_buzzer_volume)
 last_seen_rfid = None
@@ -74,7 +78,7 @@ def send_rfid(rfid: str | None):
     data = { "id": rfid }
 
     try:
-        response = post(url, json=data)
+        response = post(scan_url, json=data)
         if response.status_code == ok or response.status_code == not_found:
             print(f'Successfully sent RFID: {rfid}')
             beep()
@@ -89,9 +93,28 @@ def beep(amount: int = 1):
         buzzer.tone(buzz_frequency_hz, buzz_duration_ms)
         sleep_ms(250)
 
+def show_currently_playing():
+    try:
+        response = get(currently_playing_url)
+        if response.status_code == ok:
+            data = response.json()
+            display.text(data['name'], 0, 0, 1)
+            display.text(data['artists'], 0, 15, 1)
+            display.text(data['progress'], 0, 30, 1)
+            display.show()
+        elif response.status_code == not_found:
+            display.text("Nothing playing", 0, 0, 1)
+            display.show()
+        else:
+            response.raise_for_status()
+    except:
+        display.text("Sorry, something went wrong", 0, 0, 1)
+        display.show()
+
 # Main
 print("Starting RFID scanner...")
 while True:
     rfid = read_rfid()
     send_rfid(rfid)
+    show_currently_playing()
     sleep_ms(100)
