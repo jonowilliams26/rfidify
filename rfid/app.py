@@ -94,6 +94,7 @@ def beep(amount: int = 1):
         sleep_ms(250)
 
 def show_currently_playing():
+    display.fill(0)
     try:
         response = get(currently_playing_url)
         if response.status_code == ok:
