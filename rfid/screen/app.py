@@ -27,4 +27,4 @@ while True:
         display.text("Sorry, something went wrong", 0, 0, 1)
         display.show()
 
-    sleep_ms(1000)
+    sleep_ms(750)
