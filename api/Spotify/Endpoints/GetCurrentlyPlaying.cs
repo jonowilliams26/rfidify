@@ -1,5 +1,4 @@
 ﻿using RFIDify.Spotify.Apis.WebApi;
-using RFIDify.Spotify.Apis.WebApi.RequestResponse;
 
 namespace RFIDify.Spotify.Endpoints;
 
@@ -14,7 +13,7 @@ public static class GetCurrentlyPlaying
     private static async Task<Results<Ok<GetCurrentlyPlayingResponse>, NotFound>> Handle(ISpotifyWebApi api, CancellationToken cancellationToken)
     {
         var apiResponse = await api.GetCurrentlyPlaying(cancellationToken);
-        if (apiResponse.Item is null)
+        if (apiResponse?.Item is null)
         {
             return TypedResults.NotFound();
         }

@@ -1,6 +1,8 @@
 ﻿using HtmlAgilityPack;
 using RFIDify.Spotify.Apis.WebApi.RequestResponse;
 using RFIDify.Spotify.Apis.WebApi.RequestResponse.Items;
+using System.Net;
+using System.Text.Json;
 
 namespace RFIDify.Spotify.Apis.WebApi;
 
@@ -17,11 +19,16 @@ public interface ISpotifyWebApi
     Task<Track> GetTrack(string id, CancellationToken cancellationToken);
     Task<PagedResponse<SpotifyItem>> Search(string search, SpotifyItemType type, int? offset, CancellationToken cancellationToken);
     Task Play(SpotifyItem item, CancellationToken cancellationToken);
-    Task<GetCurrentlyPlayingResponse> GetCurrentlyPlaying(CancellationToken cancellationToken);
+    Task<GetCurrentlyPlayingResponse?> GetCurrentlyPlaying(CancellationToken cancellationToken);
 }
 
 public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
 {
+    public static readonly JsonSerializerOptions JsonSerializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+    };
+
     public async Task Play(SpotifyItem item, CancellationToken cancellationToken)
     {
         var request = new PlayRequest(item);
@@ -155,9 +162,15 @@ public class SpotifyWebApi(HttpClient httpClient) : ISpotifyWebApi
         };
     }
 
-    public async Task<GetCurrentlyPlayingResponse> GetCurrentlyPlaying(CancellationToken cancellationToken)
+    public async Task<GetCurrentlyPlayingResponse?> GetCurrentlyPlaying(CancellationToken cancellationToken)
     {
         var request = new GetCurrentlyPlayingRequest();
-        return await httpClient.GetFromJsonAsync<GetCurrentlyPlayingResponse>(request, cancellationToken);
+        var response = await httpClient.GetAsync(request.Uri(), cancellationToken);
+        if (response.StatusCode == HttpStatusCode.NoContent)
+        {
+            return null;
+        }
+
+        return await response.Content.ReadFromJsonAsync<GetCurrentlyPlayingResponse>(JsonSerializerOptions, cancellationToken);
     }
 }
