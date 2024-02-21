@@ -127,4 +127,4 @@ while True:
     rfid = read_rfid()
     send_rfid(rfid)
     show_currently_playing()
-    sleep_ms(100)
+    sleep_ms(50)
