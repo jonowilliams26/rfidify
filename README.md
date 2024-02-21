@@ -4,8 +4,10 @@ A Raspberry PI RFID reader that plays things on Spotify
 ## Hardware
 - [Raspberry PI 5](https://www.raspberrypi.com/products/raspberry-pi-5/)
 - [Piicodev RFID Module](https://core-electronics.com.au/piicodev-rfid-module.html)
+- [Piicodev OLED Screen](https://core-electronics.com.au/piicodev-oled-display-module-128x64-ssd1306.html)
+- [Piicodev Buzzer](https://core-electronics.com.au/piicodev-buzzer-module.html)
 - [Piicodev Adapter for Raspberry PI](https://core-electronics.com.au/piicodev-adapter-for-raspberry-pi.html)
-- [Piicodev Cable](https://core-electronics.com.au/piicodev/cables.html)
+- [3x Piicodev Cables](https://core-electronics.com.au/piicodev/cables.html)
 - [RFID Tags](https://core-electronics.com.au/catalogsearch/result/?order=bestsellers&q=ntag213)
 
 ## Software
