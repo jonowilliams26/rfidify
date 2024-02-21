@@ -31,11 +31,20 @@ services:
     container_name: nginx
     restart: always
 
-  rfid:
+  rfid-reader:
     build:
-      context: rfid
+      context: rfid/reader
     privileged: true
-    container_name: rfid
+    container_name: rfid-reader
+    restart: always
+    depends_on:
+      - api
+  
+  rfid-screen:
+    build:
+      context: rfid/screen
+    privileged: true
+    container_name: rfid-screen
     restart: always
     depends_on:
       - api

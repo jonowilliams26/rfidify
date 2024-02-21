@@ -1,17 +1,14 @@
 from datetime import datetime
 from PiicoDev_RFID import PiicoDev_RFID
 from PiicoDev_Unified import sleep_ms
-from requests import post, get
+from requests import post
 from PiicoDev_Buzzer import PiicoDev_Buzzer
-from PiicoDev_SSD1306 import create_PiicoDev_SSD1306
-from time import time
 
 
 # Contants
 # ------------------------------
 last_seen_threshold_seconds = 1
 scan_url = "http://api:8080/rfids/scan"
-currently_playing_url = "http://api:8080/spotify/currently-playing"
 max_buzzer_volume = 2
 buzz_duration_ms = 100
 buzz_frequency_hz = 1000
@@ -22,13 +19,10 @@ not_found = 404
 # Variables
 # ------------------------------
 rfid_module = PiicoDev_RFID()
-display = create_PiicoDev_SSD1306()
 buzzer = PiicoDev_Buzzer()
 buzzer.volume(max_buzzer_volume)
 last_seen_rfid = None
 last_seen_at = None
-ticks = time()
-last_screen_update = None
 
 
 # Functions
@@ -96,37 +90,9 @@ def beep(amount: int = 1):
         buzzer.tone(buzz_frequency_hz, buzz_duration_ms)
         sleep_ms(250)
 
-def show_currently_playing():
-    global last_screen_update
-    now = time()
-    if last_screen_update is not None and now - last_screen_update < 1:
-        return
-    
-    display.fill(0)
-    try:
-        response = get(currently_playing_url)
-        if response.status_code == ok:
-            data = response.json()
-            display.text(data['name'], 0, 0, 1)
-            display.text(data['artists'], 0, 15, 1)
-            display.text(data['progress'], 0, 30, 1)
-            display.show()
-        elif response.status_code == not_found:
-            display.text("Nothing playing", 0, 0, 1)
-            display.show()
-        else:
-            response.raise_for_status()
-    except:
-        display.text("Sorry, something went wrong", 0, 0, 1)
-        display.show()
-
-    last_screen_update = now
-
 # Main
 print("Starting RFID scanner...")
 while True:
     rfid = read_rfid()
     send_rfid(rfid)
-    show_currently_playing()
-    ticks = time()
     sleep_ms(100)
