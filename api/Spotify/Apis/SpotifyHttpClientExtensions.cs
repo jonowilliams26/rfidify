@@ -1,14 +1,12 @@
-﻿using System.Runtime.Serialization;
+﻿using RFIDify.Spotify.Apis.WebApi;
+using System.Runtime.Serialization;
 using System.Text.Json;
 
 namespace RFIDify.Spotify.Apis;
 
 public static class SpotifyHttpClientExtensions
 {
-    private static readonly JsonSerializerOptions jsonSerializerOptions = new()
-    {
-        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
-    };
+    private static readonly JsonSerializerOptions jsonSerializerOptions = SpotifyWebApi.JsonSerializerOptions;
 
     public static async Task<HttpResponseMessage> PutAsJsonAsync<TRequest>(this HttpClient httpClient, TRequest request, CancellationToken cancellationToken) where TRequest : ISpotifyRequest
     {
